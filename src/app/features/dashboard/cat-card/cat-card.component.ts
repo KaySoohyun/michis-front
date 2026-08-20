@@ -1,4 +1,4 @@
-import { Component, input, output } from '@angular/core';
+import { Component, input, output, computed } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Cat } from '../../../models';
 import { StatBarComponent } from '../../../shared/components/stat-bar/stat-bar.component';
@@ -9,13 +9,17 @@ import { StatBarComponent } from '../../../shared/components/stat-bar/stat-bar.c
   template: `
     <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
       <div class="flex items-center gap-3 mb-3">
-        <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-2xl">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
+             [class]="isCritical() ? 'bg-red-100' : 'bg-blue-100'">
           🐱
         </div>
         <div>
           <h3 class="font-semibold text-gray-900">{{ cat().name }}</h3>
           <p class="text-xs text-gray-500">{{ cat().species }} · Nv. {{ cat().level }}</p>
         </div>
+        @if (isCritical()) {
+          <span class="ml-auto text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">⚠️ Crítico</span>
+        }
       </div>
 
       <div class="space-y-2 mb-4">
@@ -45,4 +49,9 @@ import { StatBarComponent } from '../../../shared/components/stat-bar/stat-bar.c
 export class CatCardComponent {
   cat = input.required<Cat>();
   onRelease = output<string>();
+
+  protected readonly isCritical = computed(() => {
+    const c = this.cat();
+    return c.hunger < 10 || c.energy < 10;
+  });
 }
