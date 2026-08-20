@@ -27,6 +27,16 @@ import { UserService } from '../../../services/user.service';
                class="text-sm text-gray-600 hover:text-gray-900">
               Inventario
             </a>
+            <a routerLink="/dashboard/trivia"
+               routerLinkActive="text-blue-600"
+               class="text-sm text-gray-600 hover:text-gray-900">
+              Trivia
+            </a>
+            <a routerLink="/dashboard/ai-generator"
+               routerLinkActive="text-blue-600"
+               class="text-sm text-gray-600 hover:text-gray-900">
+              Generar Michi
+            </a>
           </div>
 
           <div class="flex items-center space-x-4">

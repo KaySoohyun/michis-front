@@ -2,18 +2,18 @@
 
 ## Etapa 1 — Models y services
 
-- [ ] Crear src/app/models/ai.model.ts
-- [ ] Crear src/app/services/ai.service.ts
+- [x] Crear src/app/models/ai.model.ts
+- [x] Crear src/app/services/ai.service.ts
 
 ## Etapa 2 — AI Cat Generator
 
-- [ ] Crear src/app/features/dashboard/ai-cat-generator/ai-cat-generator.component.ts
+- [x] Crear src/app/features/dashboard/ai-cat-generator/ai-cat-generator.component.ts
 
 ## Etapa 3 — Trivia
 
-- [ ] Crear src/app/features/trivia/trivia.component.ts
-- [ ] Actualizar app.routes.ts con ruta trivia
-- [ ] Actualizar navbar con link a trivia
+- [x] Crear src/app/features/trivia/trivia.component.ts
+- [x] Actualizar app.routes.ts con ruta trivia
+- [x] Actualizar navbar con link a trivia
 
 ## Validación
 
