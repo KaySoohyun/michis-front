@@ -37,6 +37,14 @@ export const routes: Routes = [
         path: 'inventory',
         loadComponent: () => import('./features/inventory/inventory.component'),
       },
+      {
+        path: 'trivia',
+        loadComponent: () => import('./features/trivia/trivia.component'),
+      },
+      {
+        path: 'ai-generator',
+        loadComponent: () => import('./features/dashboard/ai-cat-generator/ai-cat-generator.component').then(m => m.AiCatGeneratorComponent),
+      },
     ],
   },
   { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
