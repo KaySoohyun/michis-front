@@ -12,12 +12,12 @@
 
 ## Etapa 2 — Auth
 
-- [ ] Crear src/app/core/auth/auth.service.ts
-- [ ] Crear src/app/core/auth/auth.interceptor.ts
-- [ ] Crear src/app/core/auth/error.interceptor.ts
-- [ ] Crear src/app/core/auth/auth.guard.ts
-- [ ] Crear src/app/features/auth/login/login.component.ts
-- [ ] Crear src/app/features/auth/register/register.component.ts
+- [x] Crear src/app/core/auth/auth.service.ts
+- [x] Crear src/app/core/auth/auth.interceptor.ts
+- [x] Crear src/app/core/auth/error.interceptor.ts
+- [x] Crear src/app/core/auth/auth.guard.ts
+- [x] Crear src/app/features/auth/login/login.component.ts
+- [x] Crear src/app/features/auth/register/register.component.ts
 
 ## Etapa 3 — Layout + routing
 
