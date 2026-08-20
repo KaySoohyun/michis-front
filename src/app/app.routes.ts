@@ -25,6 +25,14 @@ export const routes: Routes = [
         path: '',
         loadComponent: () => import('./features/dashboard/dashboard.component'),
       },
+      {
+        path: 'cat/:id',
+        loadComponent: () => import('./features/dashboard/cat-detail/cat-detail.component').then(m => m.CatDetailComponent),
+      },
+      {
+        path: 'adopt',
+        loadComponent: () => import('./features/dashboard/dashboard.component'),
+      },
     ],
   },
   { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
