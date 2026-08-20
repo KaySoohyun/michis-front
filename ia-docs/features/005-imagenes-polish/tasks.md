@@ -2,21 +2,21 @@
 
 ## Etapa 1 — Upload service
 
-- [ ] Crear src/app/services/upload.service.ts
-- [ ] Actualizar cat.model.ts para soportar imageUrl del backend
+- [x] Crear src/app/services/upload.service.ts
+- [x] Actualizar cat.model.ts para soportar imageUrl del backend
 
 ## Etapa 2 — Polish visual
 
-- [ ] Crear src/app/shared/layout/shell/shell.component.ts con animaciones de ruta
-- [ ] Agregar skeleton loading en dashboard y shop
-- [ ] Revisar responsive en todos los componentes
+- [x] Crear src/app/shared/layout/shell/shell.component.ts con animaciones de ruta
+- [x] Agregar skeleton loading en dashboard y shop
+- [x] Revisar responsive en todos los componentes
 
 ## Etapa 3 — Testing
 
-- [ ] Configurar vitest.config.ts
-- [ ] Crear tests para auth.service.ts
-- [ ] Crear tests para cat.store.ts
-- [ ] Crear tests para stat-bar.component.ts
+- [x] Configurar vitest.config.ts
+- [x] Crear tests para auth.service.ts
+- [x] Crear tests para cat.store.ts
+- [x] Crear tests para stat-bar.component.ts
 
 ## Validación
 
