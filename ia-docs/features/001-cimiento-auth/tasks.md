@@ -2,13 +2,13 @@
 
 ## Etapa 1 — Core setup
 
-- [ ] Crear estructura: src/app/core/, src/app/features/, src/app/shared/, src/app/services/, src/app/models/
-- [ ] Crear src/app/models/user.model.ts
-- [ ] Crear src/app/models/cat.model.ts
-- [ ] Crear src/app/models/api.model.ts (ApiResponse, ApiError)
-- [ ] Crear src/environments/environment.ts y environment.development.ts
-- [ ] Crear proxy.conf.json para /api → localhost:3000
-- [ ] Actualizar angular.json con proxy config
+- [x] Crear estructura: src/app/core/, src/app/features/, src/app/shared/, src/app/services/, src/app/models/
+- [x] Crear src/app/models/user.model.ts
+- [x] Crear src/app/models/cat.model.ts
+- [x] Crear src/app/models/api.model.ts (ApiResponse, ApiError)
+- [x] Crear src/environments/environment.ts y environment.development.ts
+- [x] Crear proxy.conf.json para /api → localhost:3000
+- [x] Actualizar angular.json con proxy config
 
 ## Etapa 2 — Auth
 
