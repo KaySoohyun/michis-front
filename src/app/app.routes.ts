@@ -30,8 +30,12 @@ export const routes: Routes = [
         loadComponent: () => import('./features/dashboard/cat-detail/cat-detail.component').then(m => m.CatDetailComponent),
       },
       {
-        path: 'adopt',
-        loadComponent: () => import('./features/dashboard/dashboard.component'),
+        path: 'shop',
+        loadComponent: () => import('./features/shop/shop.component'),
+      },
+      {
+        path: 'inventory',
+        loadComponent: () => import('./features/inventory/inventory.component'),
       },
     ],
   },
