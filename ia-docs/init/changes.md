@@ -2,6 +2,16 @@
 
 Cambios significativos / bugs corregidos en `ia-docs/init/changes.md`.
 
+## 2026-08-22 — Starfield galáctico (estrellas en el fondo)
+
+Se agregaron estrellas al backdrop para reforzar la estética espacial, sobre el fondo Aurora existente.
+
+- `styles.css`: dos capas de estrellas vía pseudo-elementos de `body` (`::before` / `::after`), `position: fixed`, `pointer-events: none`, pintadas detrás del contenido (sobre el backdrop Aurora):
+  - Capa 1: estrellas pequeñas y tenues en tile de 260x240px, con algunas azuladas/violetas.
+  - Capa 2: estrellas menos densas y más brillantes con glow suave, tile de 480x400px.
+- Titileo sutil por opacidad (6s capa 1, 4s capa 2) y desactivado con `prefers-reduced-motion: reduce`.
+- Sin cambios en componentes: aplica a todas las rutas (incluye login/register).
+
 ## 2026-08-22 — Fondo Aurora (dark theme)
 
 Se aplicó el backdrop de referencia "Aurora" de `ia-docs/extras/background.md`, alineado a la paleta del spec (§9).

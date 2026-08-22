@@ -25,3 +25,56 @@ body {
     radial-gradient(ellipse 60% 45% at 85% 95%, hsl(262 83% 58% / 0.1), transparent 60%);
   background-attachment: fixed;
 }
+
+/* Starfield galáctico: dos capas de estrellas fijas sobre el backdrop Aurora */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: repeat;
+}
+
+/* Capa 1: estrellas pequeñas y tenues (algunas azuladas/violetas) */
+body::before {
+  background-image:
+    radial-gradient(1px 1px at 12px 44px, rgb(255 255 255 / 0.55), transparent),
+    radial-gradient(1px 1px at 78px 132px, rgb(255 255 255 / 0.45), transparent),
+    radial-gradient(1px 1px at 156px 68px, rgb(255 255 255 / 0.6), transparent),
+    radial-gradient(1px 1px at 204px 180px, rgb(255 255 255 / 0.4), transparent),
+    radial-gradient(1px 1px at 48px 208px, rgb(199 210 254 / 0.5), transparent),
+    radial-gradient(1px 1px at 232px 24px, rgb(186 230 253 / 0.45), transparent);
+  background-size: 260px 240px;
+  animation: star-twinkle-slow 6s ease-in-out infinite alternate;
+}
+
+/* Capa 2: estrellas menos densas y más brillantes, con glow suave */
+body::after {
+  background-image:
+    radial-gradient(2px 2px at 64px 96px, rgb(255 255 255 / 0.95), transparent),
+    radial-gradient(3px 3px at 288px 40px, rgb(255 255 255 / 0.85), transparent 40%),
+    radial-gradient(2px 2px at 180px 260px, rgb(196 181 253 / 0.9), transparent),
+    radial-gradient(2px 2px at 380px 200px, rgb(147 197 253 / 0.85), transparent),
+    radial-gradient(2px 2px at 420px 320px, rgb(255 255 255 / 0.8), transparent 30%);
+  background-size: 480px 400px;
+  animation: star-twinkle-fast 4s ease-in-out infinite alternate;
+}
+
+@keyframes star-twinkle-slow {
+  from { opacity: 1; }
+  to { opacity: 0.6; }
+}
+
+@keyframes star-twinkle-fast {
+  from { opacity: 0.55; }
+  to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    animation: none;
+  }
+}
