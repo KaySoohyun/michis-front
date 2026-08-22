@@ -1,10 +1,10 @@
-import { Injectable, signal, computed, inject } from '@angular/core';
+import { Injectable, signal, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../../environments/environment';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class UserService {
-  private readonly apiUrl = `${environment.apiUrl}/v1`;
+  private readonly apiUrl = `${environment.apiUrl}/auth`;
   private readonly coinsSignal = signal(0);
 
   readonly coins = this.coinsSignal.asReadonly();
@@ -12,10 +12,12 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   loadCoins(): void {
-    this.http.get<{ coinBalance: number }>(`${this.apiUrl}/users/me`).subscribe({
-      next: (res) => this.coinsSignal.set(res.coinBalance),
-      error: () => this.coinsSignal.set(0),
-    });
+    this.http
+      .get<{ data: { coinBalance: number } }>(`${this.apiUrl}/me`)
+      .subscribe({
+        next: (res) => this.coinsSignal.set(res.data.coinBalance),
+        error: () => this.coinsSignal.set(0),
+      });
   }
 
   updateCoins(amount: number): void {

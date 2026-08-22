@@ -15,7 +15,7 @@ import { StatBarComponent } from '../../../shared/components/stat-bar/stat-bar.c
         </div>
         <div>
           <h3 class="font-semibold text-gray-900">{{ cat().name }}</h3>
-          <p class="text-xs text-gray-500">{{ cat().species }} · Nv. {{ cat().level }}</p>
+          <p class="text-xs text-gray-500">{{ cat().species }}</p>
         </div>
         @if (isCritical()) {
           <span class="ml-auto text-xs bg-red-100 text-red-700 px-2 py-1 rounded-full">⚠️ Crítico</span>

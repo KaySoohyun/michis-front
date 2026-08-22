@@ -42,7 +42,7 @@ import { UserService } from '../../../services/user.service';
           <div class="flex items-center space-x-4">
             @if (authService.isAuthenticated()) {
               <span class="text-sm font-medium text-yellow-600">💰 {{ userService.coins() }}</span>
-              <span class="text-sm text-gray-700">{{ authService.user()?.name }}</span>
+              <span class="text-sm text-gray-700">{{ authService.user()?.displayName }}</span>
               <button
                 (click)="authService.logout()"
                 class="text-sm text-gray-500 hover:text-gray-700"

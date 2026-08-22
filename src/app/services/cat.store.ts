@@ -2,7 +2,7 @@ import { Injectable, signal, computed, inject, OnDestroy } from '@angular/core';
 import { CatService } from './cat.service';
 import { Cat, CatStatus, CreateCatRequest } from '../models';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class CatStore implements OnDestroy {
   private readonly catService = inject(CatService);
   private readonly catsSignal = signal<Cat[]>([]);

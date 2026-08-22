@@ -1,7 +1,14 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, OnInit } from '@angular/core';
 import { AiService } from '../../services/ai.service';
 import { UserService } from '../../services/user.service';
 import { TriviaQuestion } from '../../models';
+
+interface TriviaResult {
+  correct: boolean;
+  correctAnswer: string;
+  explanation: string | null;
+  coinsEarned: number;
+}
 
 @Component({
   selector: 'app-trivia',
@@ -22,7 +29,7 @@ import { TriviaQuestion } from '../../models';
             } @else {
               <div class="text-4xl mb-4">😿</div>
               <h2 class="text-xl font-bold text-red-700 mb-2">Incorrecto</h2>
-              <p class="text-gray-600">La respuesta correcta era la opción {{ lastResult()?.correctAnswer! + 1 }}</p>
+              <p class="text-gray-600">La respuesta correcta era: {{ lastResult()?.correctAnswer }}</p>
             }
             <p class="text-sm text-gray-500 mt-4">{{ lastResult()?.explanation }}</p>
             <button
@@ -72,7 +79,7 @@ import { TriviaQuestion } from '../../models';
     </div>
   `,
 })
-export default class TriviaComponent {
+export default class TriviaComponent implements OnInit {
   readonly aiService = inject(AiService);
   readonly userService = inject(UserService);
 
@@ -80,7 +87,7 @@ export default class TriviaComponent {
   readonly answered = signal(false);
   readonly selectedAnswer = signal<number | null>(null);
   readonly showResult = signal(false);
-  readonly lastResult = signal<{ correct: boolean; correctAnswer: number; explanation: string; coinsEarned: number } | null>(null);
+  readonly lastResult = signal<TriviaResult | null>(null);
 
   ngOnInit(): void {
     if (!this.trivia()) {
@@ -105,18 +112,22 @@ export default class TriviaComponent {
     const trivia = this.trivia();
     if (!trivia) return;
 
-    this.aiService.answerTrivia({ triviaId: trivia.id, answer: index }).subscribe({
-      next: (res) => {
-        this.lastResult.set({
-          correct: res.correct,
-          correctAnswer: res.correctAnswer,
-          explanation: res.explanation,
-          coinsEarned: res.coinsEarned,
-        });
-        this.showResult.set(true);
-        this.userService.updateCoins(res.totalCoins);
-      },
-    });
+    this.aiService
+      .answerTrivia({ triviaId: trivia.triviaId, answer: trivia.options[index] })
+      .subscribe({
+        next: (res) => {
+          this.lastResult.set({
+            correct: res.wasCorrect,
+            correctAnswer: res.correctAnswer,
+            explanation: res.explanation,
+            coinsEarned: res.rewardEarned,
+          });
+          this.showResult.set(true);
+          if (this.userService.coins() === 0) {
+            this.userService.loadCoins();
+          }
+        },
+      });
   }
 
   getOptionClass(index: number): string {
@@ -127,11 +138,13 @@ export default class TriviaComponent {
     const trivia = this.trivia();
     if (!trivia) return 'border-gray-200';
 
-    if (index === trivia.correctAnswer) {
-      return 'border-green-500 bg-green-50';
+    const correct = this.lastResult()?.correctAnswer;
+    if (index === this.selectedAnswer() && correct !== undefined) {
+      const isCorrect = trivia.options[index] === correct;
+      return isCorrect ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50';
     }
-    if (index === this.selectedAnswer()) {
-      return 'border-red-500 bg-red-50';
+    if (correct !== undefined && trivia.options[index] === correct) {
+      return 'border-green-500 bg-green-50';
     }
     return 'border-gray-200 opacity-50';
   }

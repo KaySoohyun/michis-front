@@ -83,7 +83,7 @@ export default class RegisterComponent {
     const email = (form.elements.namedItem('email') as HTMLInputElement).value;
     const password = (form.elements.namedItem('password') as HTMLInputElement).value;
 
-    this.authService.register({ name, email, password }).subscribe({
+    this.authService.register({ email, password, displayName: name }).subscribe({
       next: () => this.router.navigate(['/dashboard']),
     });
   }

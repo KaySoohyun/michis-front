@@ -5,7 +5,7 @@ import { Observable, tap, catchError, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { User, LoginRequest, RegisterRequest, AuthResponse } from '../../models';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthService {
   private readonly apiUrl = `${environment.apiUrl}/auth`;
   private readonly userSignal = signal<User | null>(null);
@@ -30,7 +30,7 @@ export class AuthService {
 
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
       tap((response) => {
-        this.handleAuthResponse(response);
+        this.handleAuthResponse(response.data);
         this.loadingSignal.set(false);
       }),
       catchError((error) => {
@@ -47,7 +47,7 @@ export class AuthService {
 
     return this.http.post<AuthResponse>(`${this.apiUrl}/register`, data).pipe(
       tap((response) => {
-        this.handleAuthResponse(response);
+        this.handleAuthResponse(response.data);
         this.loadingSignal.set(false);
       }),
       catchError((error) => {
@@ -69,8 +69,12 @@ export class AuthService {
     return localStorage.getItem('access_token');
   }
 
-  private handleAuthResponse(response: AuthResponse): void {
-    localStorage.setItem('access_token', response.access_token);
+  private handleAuthResponse(response: {
+    user: User;
+    token: string;
+    refreshToken: string;
+  }): void {
+    localStorage.setItem('access_token', response.token);
     localStorage.setItem('user', JSON.stringify(response.user));
     this.userSignal.set(response.user);
   }

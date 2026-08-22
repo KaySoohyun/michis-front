@@ -18,35 +18,22 @@ export interface GenerateCatRequest {
 }
 
 export interface TriviaQuestion {
-  id: string;
+  triviaId: string;
   question: string;
   options: string[];
-  correctAnswer: number;
-  explanation: string;
-  rewardCoins: number;
   difficulty: string;
   category: string;
+  rewardCoins: number;
 }
 
 export interface AnswerTriviaRequest {
   triviaId: string;
-  answer: number;
+  answer: string;
 }
 
 export interface AnswerTriviaResponse {
-  correct: boolean;
-  correctAnswer: number;
-  explanation: string;
-  coinsEarned: number;
-  totalCoins: number;
-}
-
-export interface TriviaHistoryEntry {
-  id: string;
-  question: string;
-  correct: boolean;
-  category: string;
-  difficulty: string;
-  coinsEarned: number;
-  answeredAt: string;
+  wasCorrect: boolean;
+  correctAnswer: string;
+  explanation: string | null;
+  rewardEarned: number;
 }

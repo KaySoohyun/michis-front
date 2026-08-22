@@ -1,27 +1,29 @@
-export interface Cat {
-  id: string;
-  name: string;
-  slotNumber: number;
-  species: string;
-  personality: string;
-  hunger: number;
-  energy: number;
-  happiness: number;
-  cleanliness: number;
-  level: number;
-  experience: number;
-  equippedItems: string[];
-  ownerId: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface CatStatus {
   isHungry: boolean;
   isTired: boolean;
   isSad: boolean;
   isDirty: boolean;
   isCritical: boolean;
+}
+
+export interface Cat {
+  id: string;
+  name: string;
+  slotNumber: number;
+  species: string;
+  personality: string;
+  lore: string | null;
+  hunger: number;
+  energy: number;
+  happiness: number;
+  cleanliness: number;
+  avatarUrl: string | null;
+  birthDate: string;
+  isAlive: boolean;
+  equippedItems: string[];
+  lastFedAt: string | null;
+  lastPlayedAt: string | null;
+  status?: CatStatus;
 }
 
 export interface CreateCatRequest {
@@ -37,7 +39,7 @@ export interface CatActionResponse {
 }
 
 export interface FeedResponse extends CatActionResponse {
-  consumedItem?: string;
+  consumedItem?: { id: string; name: string };
 }
 
 export interface PlayResponse extends CatActionResponse {
@@ -51,4 +53,8 @@ export interface CleanResponse extends CatActionResponse {
 
 export interface SleepResponse extends CatActionResponse {
   energyRecovered: number;
+}
+
+export interface EquipResponse extends CatActionResponse {
+  equippedItems: string[];
 }

@@ -8,7 +8,9 @@ export enum ItemType {
 
 export enum Rarity {
   COMMON = 'COMMON',
+  UNCOMMON = 'UNCOMMON',
   RARE = 'RARE',
+  EPIC = 'EPIC',
   LEGENDARY = 'LEGENDARY',
 }
 
@@ -18,8 +20,10 @@ export interface InventoryItem {
   type: ItemType;
   rarity: Rarity;
   price: number;
-  description: string;
-  imageUrl?: string;
+  description: string | null;
+  imageUrl: string | null;
+  isActive: boolean;
+  statsBoost: Record<string, number>;
   createdAt: string;
 }
 
@@ -28,14 +32,20 @@ export interface UserInventory {
   userId: string;
   itemId: string;
   quantity: number;
-  equipped: boolean;
-  equippedCatId?: string;
+  isEquipped: boolean;
+  acquiredAt: string;
   item: InventoryItem;
 }
 
-export interface ShopCatalogResponse {
-  items: InventoryItem[];
-  userCoins: number;
+export interface ApiEnvelope<T> {
+  data: T;
+}
+
+export interface ShopCatalogEnvelope {
+  data: {
+    items: InventoryItem[];
+    userCoins: number;
+  };
 }
 
 export interface BuyRequest {
@@ -46,15 +56,5 @@ export interface BuyRequest {
 export interface BuyResponse {
   success: boolean;
   remainingCoins: number;
-  inventoryItem: UserInventory;
-}
-
-export interface EquipRequest {
-  inventoryItemId: string;
-  catId: string;
-}
-
-export interface EquipResponse {
-  success: boolean;
-  equippedState: boolean;
+  purchasedItem: { id: string; name: string; quantity: number };
 }

@@ -11,9 +11,9 @@ export interface UploadResponse {
   size: number;
 }
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class UploadService {
-  private readonly apiUrl = `${environment.apiUrl}/v1/upload`;
+  private readonly apiUrl = `${environment.apiUrl}/upload`;
 
   constructor(private http: HttpClient) {}
 

@@ -1,6 +1,7 @@
 import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { CatStore } from '../../../services/cat.store';
+import { InventoryService } from '../../../services/inventory.service';
 import { Cat, CatStatus } from '../../../models';
 import { StatBarComponent } from '../../../shared/components/stat-bar/stat-bar.component';
 
@@ -21,7 +22,7 @@ import { StatBarComponent } from '../../../shared/components/stat-bar/stat-bar.c
             </div>
             <div>
               <h1 class="text-2xl font-bold text-gray-900">{{ cat.name }}</h1>
-              <p class="text-gray-600">{{ cat.species }} · {{ cat.personality }} · Nv. {{ cat.level }}</p>
+              <p class="text-gray-600">{{ cat.species }} · {{ cat.personality }}</p>
             </div>
           </div>
 
@@ -51,6 +52,12 @@ import { StatBarComponent } from '../../../shared/components/stat-bar/stat-bar.c
             <app-stat-bar label="Felicidad" [value]="cat.happiness" />
             <app-stat-bar label="Limpieza" [value]="cat.cleanliness" />
           </div>
+
+          @if (feedMessage()) {
+            <div class="mb-4 p-3 rounded-md bg-green-50 border border-green-200 text-green-700 text-sm">
+              {{ feedMessage() }}
+            </div>
+          }
 
           <div class="grid grid-cols-2 gap-3">
             <button
@@ -91,12 +98,14 @@ import { StatBarComponent } from '../../../shared/components/stat-bar/stat-bar.c
 })
 export class CatDetailComponent implements OnInit {
   private readonly catStore = inject(CatStore);
+  private readonly inventoryService = inject(InventoryService);
   private readonly router = inject(Router);
 
   readonly catId = input.required<string>();
 
   readonly cat = this.catStore.selectedCat;
   readonly status = this.catStore.catStatus;
+  readonly feedMessage = signal<string | null>(null);
 
   ngOnInit(): void {
     this.catStore.selectCat(this.catId());
@@ -109,9 +118,22 @@ export class CatDetailComponent implements OnInit {
 
   onFeed(): void {
     const cat = this.cat();
-    if (cat) {
-      this.catStore.feedCat(cat.id, '');
-    }
+    if (!cat) return;
+
+    this.feedMessage.set(null);
+    this.inventoryService.getInventory().subscribe({
+      next: (items) => {
+        const food = items.find((entry) => entry.item.type === 'FOOD' && entry.quantity > 0);
+        if (!food) {
+          this.feedMessage.set('No tienes comida en tu inventario. Visita la tienda.');
+          return;
+        }
+        this.catStore.feedCat(cat.id, food.itemId);
+      },
+      error: () => {
+        this.feedMessage.set('No se pudo cargar el inventario para alimentar.');
+      },
+    });
   }
 
   onPlay(): void {

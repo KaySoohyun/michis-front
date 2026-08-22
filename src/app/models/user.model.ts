@@ -1,15 +1,10 @@
 export interface User {
   id: string;
   email: string;
-  name: string;
-  role: UserRole;
+  displayName: string | null;
+  coinBalance: number;
+  avatarUrl: string | null;
   createdAt: string;
-  updatedAt: string;
-}
-
-export enum UserRole {
-  ADMIN = 'admin',
-  USER = 'user',
 }
 
 export interface LoginRequest {
@@ -20,10 +15,13 @@ export interface LoginRequest {
 export interface RegisterRequest {
   email: string;
   password: string;
-  name: string;
+  displayName?: string | null;
 }
 
 export interface AuthResponse {
-  user: User;
-  access_token: string;
+  data: {
+    user: User;
+    token: string;
+    refreshToken: string;
+  };
 }

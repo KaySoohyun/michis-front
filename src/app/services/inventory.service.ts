@@ -1,20 +1,23 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { UserInventory, EquipRequest, EquipResponse } from '../models';
+import { UserInventory } from '../models';
 
-@Injectable()
+interface Envelope<T> {
+  data: T;
+}
+
+@Injectable({ providedIn: 'root' })
 export class InventoryService {
-  private readonly apiUrl = `${environment.apiUrl}/v1/inventory`;
+  private readonly apiUrl = `${environment.apiUrl}/inventory`;
 
   constructor(private http: HttpClient) {}
 
   getInventory(): Observable<UserInventory[]> {
-    return this.http.get<UserInventory[]>(this.apiUrl);
-  }
-
-  equipItem(data: EquipRequest): Observable<EquipResponse> {
-    return this.http.post<EquipResponse>(`${this.apiUrl}/equip`, data);
+    return this.http
+      .get<Envelope<{ items: UserInventory[] }>>(this.apiUrl)
+      .pipe(map((res) => res.data.items));
   }
 }
