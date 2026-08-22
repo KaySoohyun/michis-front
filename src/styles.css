@@ -11,6 +11,28 @@
   --color-success: hsl(142 71% 45%);
   --color-warning: hsl(38 92% 50%);
   --color-danger: hsl(0 84% 60%);
+
+  /* Fuentes retro intercambiables (feature 006): alternar estos dos
+     tokens para probar VT323 / Kode Mono / Quantico / Chakra Petch /
+     WDXL Lubrifont JP N en vivo. */
+  --font-display: 'VT323', 'Kode Mono', monospace;
+  --font-body: 'Quantico', 'Chakra Petch', sans-serif;
+}
+
+/* Utilidades pixel (feature 006) */
+
+/* Borde escalonado estilo consola retro */
+.pixel-frame {
+  border: 4px solid rgb(255 255 255 / 0.85);
+  box-shadow:
+    inset 0 0 0 4px hsl(230 25% 18%),
+    0 0 0 4px hsl(230 25% 10%),
+    8px 8px 0 0 rgb(0 0 0 / 0.45);
+}
+
+/* Pixel art nítido al escalar imágenes */
+.pixelated {
+  image-rendering: pixelated;
 }
 
 /* Backdrop Aurora: base dark-space + glows violeta/azul/rosa (ia-docs/extras/background.md) */
@@ -26,9 +48,12 @@ body {
   background-attachment: fixed;
 }
 
-/* Starfield galáctico: dos capas de estrellas fijas sobre el backdrop Aurora */
+/* Starfield galáctico v2 (feature 006):
+   capas base estáticas + solo algunas estrellas titilando */
 body::before,
-body::after {
+body::after,
+html::before,
+html::after {
   content: '';
   position: fixed;
   inset: 0;
@@ -37,7 +62,7 @@ body::after {
   background-repeat: repeat;
 }
 
-/* Capa 1: estrellas pequeñas y tenues (algunas azuladas/violetas) */
+/* Base estática: estrellas pequeñas y tenues */
 body::before {
   background-image:
     radial-gradient(1px 1px at 12px 44px, rgb(255 255 255 / 0.55), transparent),
@@ -47,10 +72,9 @@ body::before {
     radial-gradient(1px 1px at 48px 208px, rgb(199 210 254 / 0.5), transparent),
     radial-gradient(1px 1px at 232px 24px, rgb(186 230 253 / 0.45), transparent);
   background-size: 260px 240px;
-  animation: star-twinkle-slow 6s ease-in-out infinite alternate;
 }
 
-/* Capa 2: estrellas menos densas y más brillantes, con glow suave */
+/* Base estática: estrellas brillantes con glow suave */
 body::after {
   background-image:
     radial-gradient(2px 2px at 64px 96px, rgb(255 255 255 / 0.95), transparent),
@@ -59,22 +83,41 @@ body::after {
     radial-gradient(2px 2px at 380px 200px, rgb(147 197 253 / 0.85), transparent),
     radial-gradient(2px 2px at 420px 320px, rgb(255 255 255 / 0.8), transparent 30%);
   background-size: 480px 400px;
-  animation: star-twinkle-fast 4s ease-in-out infinite alternate;
 }
 
-@keyframes star-twinkle-slow {
-  from { opacity: 1; }
-  to { opacity: 0.6; }
+/* Titilantes dispersas: pocas por capa, ritmos y fases distintas
+   para que en pantalla solo "algunas" parpadeen */
+html::before {
+  background-image:
+    radial-gradient(2px 2px at 90px 120px, rgb(255 255 255 / 0.9), transparent),
+    radial-gradient(1px 1px at 300px 320px, rgb(186 230 253 / 0.8), transparent),
+    radial-gradient(2px 2px at 460px 80px, rgb(255 255 255 / 0.75), transparent);
+  background-size: 540px 420px;
+  animation: star-twinkle-a 3.8s ease-in-out -1.2s infinite alternate;
 }
 
-@keyframes star-twinkle-fast {
-  from { opacity: 0.55; }
+html::after {
+  background-image:
+    radial-gradient(3px 3px at 140px 200px, rgb(196 181 253 / 0.95), transparent 40%),
+    radial-gradient(2px 2px at 520px 440px, rgb(255 255 255 / 0.9), transparent),
+    radial-gradient(2px 2px at 360px 60px, rgb(147 197 253 / 0.85), transparent);
+  background-size: 640px 560px;
+  animation: star-twinkle-b 5.6s ease-in-out -3.4s infinite alternate;
+}
+
+@keyframes star-twinkle-a {
+  from { opacity: 0.25; }
   to { opacity: 1; }
 }
 
+@keyframes star-twinkle-b {
+  from { opacity: 1; }
+  to { opacity: 0.15; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  body::before,
-  body::after {
+  html::before,
+  html::after {
     animation: none;
   }
 }
