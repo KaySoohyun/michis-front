@@ -1,3 +1,27 @@
-/* You can add global styles to this file, and also import other style files */
-
 @import 'tailwindcss';
+
+/* Design tokens — Michis Intergalácticos (spec.md §9) */
+@theme {
+  --color-background: hsl(230 25% 7%);
+  --color-card: hsl(230 20% 12%);
+  --color-foreground: hsl(0 0% 95%);
+  --color-primary: hsl(262 83% 58%);
+  --color-secondary: hsl(199 89% 48%);
+  --color-accent: hsl(45 93% 47%);
+  --color-success: hsl(142 71% 45%);
+  --color-warning: hsl(38 92% 50%);
+  --color-danger: hsl(0 84% 60%);
+}
+
+/* Backdrop Aurora: base dark-space + glows violeta/azul/rosa (ia-docs/extras/background.md) */
+body {
+  min-height: 100vh;
+  color: var(--color-foreground);
+  background-color: var(--color-background);
+  background-image:
+    radial-gradient(ellipse 80% 60% at 15% 0%, hsl(262 83% 58% / 0.22), transparent 60%),
+    radial-gradient(ellipse 70% 55% at 85% 5%, hsl(199 89% 48% / 0.18), transparent 60%),
+    radial-gradient(ellipse 90% 55% at 50% 105%, hsl(315 70% 44% / 0.14), transparent 65%),
+    radial-gradient(ellipse 60% 45% at 85% 95%, hsl(262 83% 58% / 0.1), transparent 60%);
+  background-attachment: fixed;
+}

@@ -6,7 +6,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
   selector: 'app-shell',
   imports: [RouterOutlet, NavbarComponent],
   template: `
-    <div class="min-h-screen bg-gray-50">
+    <div class="min-h-screen">
       <app-navbar />
       <main>
         <router-outlet />

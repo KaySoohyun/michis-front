@@ -2,6 +2,15 @@
 
 Cambios significativos / bugs corregidos en `ia-docs/init/changes.md`.
 
+## 2026-08-22 — Fondo Aurora (dark theme)
+
+Se aplicó el backdrop de referencia "Aurora" de `ia-docs/extras/background.md`, alineado a la paleta del spec (§9).
+
+- `styles.css`: tokens de color semánticos en `@theme` (background, card, foreground, primary, secondary, accent, success, warning, danger) y fondo global en `body`: base `hsl(230 25% 7%)` con glows radiales violeta/azul/rosa (`background-attachment: fixed`).
+- `shell.component.ts`: se quitó `bg-gray-50` para que el backdrop aurora sea visible.
+
+Pendiente: navbar y cards siguen con fondo claro (`bg-white`), chocan con el tema oscuro; adaptarlos en un polish posterior.
+
 ## 2026-08-20 — Corrección de integración frontend ↔ backend
 
 Se corrigió la integración del frontend con la API NestJS del backend (prefijo global `api/v1`, envoltorio `{ data }` y formas de respuesta reales).
