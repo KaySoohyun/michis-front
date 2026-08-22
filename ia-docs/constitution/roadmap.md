@@ -12,8 +12,11 @@ Orden y estado de las features. Cada entrada apunta a su carpeta en `features/`.
 
 ## Siguiente 🔜
 
-_Ninguna feature pendiente._
+6. **006 · UI Tamagotchi Pixel Art** — Rediseño consola retro: status panel de 4 stats, LV cosmético, caja de diálogo, rail flotante (tienda/inventario/trivia/adoptar) y card de perfil sin navbar.
 
 ## Backlog / ideas 💡
+
+- **Sistema real de XP/niveles** — Persistir EXP por acciones en backend y desbloqueos.
+- **Sprites pixel-art del michi** — Reemplazar placeholder ASCII por sprites animados cuando haya assets.
 
 > Cada feature nueva se crea como `features/NNN-nombre-feature/` con `spec.md`, `plan.md` y `tasks.md` antes de tocar código.
