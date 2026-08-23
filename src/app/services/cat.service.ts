@@ -73,6 +73,12 @@ export class CatService {
       .pipe(map((res) => res.data));
   }
 
+  unequipCat(id: string, itemId: string): Observable<EquipResponse> {
+    return this.http
+      .delete<Envelope<EquipResponse>>(`${this.apiUrl}/${id}/equip/${itemId}`)
+      .pipe(map((res) => res.data));
+  }
+
   releaseCat(id: string): Observable<{ message: string }> {
     return this.http
       .delete<Envelope<{ message: string }>>(`${this.apiUrl}/${id}`)

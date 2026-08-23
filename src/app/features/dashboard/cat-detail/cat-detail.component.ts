@@ -1,103 +1,131 @@
-import { Component, inject, input, OnInit, signal } from '@angular/core';
+import { Component, inject, input, signal, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CatStore } from '../../../services/cat.store';
+import { CatService } from '../../../services/cat.service';
 import { InventoryService } from '../../../services/inventory.service';
-import { Cat, CatStatus } from '../../../models';
-import { StatBarComponent } from '../../../shared/components/stat-bar/stat-bar.component';
+import { UserInventory } from '../../../models';
+import { ConsoleTopBarComponent } from './console/console-top-bar/console-top-bar.component';
+import { StatusMeterComponent } from './console/status-meter/status-meter.component';
+import { LevelBadgeComponent } from './console/level-badge/level-badge.component';
+import { DialogBoxComponent } from './console/dialog-box/dialog-box.component';
+import {
+  ActionBarComponent,
+  ConsoleAction,
+} from './console/action-bar/action-bar.component';
 
 @Component({
   selector: 'app-cat-detail',
-  imports: [StatBarComponent],
+  imports: [
+    ConsoleTopBarComponent,
+    StatusMeterComponent,
+    LevelBadgeComponent,
+    DialogBoxComponent,
+    ActionBarComponent,
+  ],
   template: `
     @if (cat(); as cat) {
-      <div class="max-w-2xl mx-auto p-6">
-        <button (click)="goBack()" class="mb-4 text-blue-600 hover:text-blue-800 text-sm">
-          ← Volver al dashboard
+      <div class="mx-auto max-w-3xl">
+        <button
+          type="button"
+          (click)="goBack()"
+          class="mb-3 font-display text-base tracking-wider text-white/70 hover:text-white focus-visible:outline-2 focus-visible:outline-accent"
+        >
+          ← Volver
         </button>
 
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <div class="flex items-center gap-4 mb-6">
-            <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center text-4xl">
-              🐱
-            </div>
-            <div>
-              <h1 class="text-2xl font-bold text-gray-900">{{ cat.name }}</h1>
-              <p class="text-gray-600">{{ cat.species }} · {{ cat.personality }}</p>
-            </div>
-          </div>
+        <!-- Consola Tamagotchi -->
+        <section class="pixel-frame bg-[hsl(230_25%_10%)]" [attr.aria-label]="'Consola de ' + cat.name">
+          <app-console-top-bar [name]="cat.name" />
 
-          @if (status(); as status) {
-            <div class="mb-6 p-3 rounded-md" [class]="status.isCritical ? 'bg-red-50 border border-red-200' : 'bg-gray-50'">
-              <p class="text-sm" [class]="status.isCritical ? 'text-red-700' : 'text-gray-600'">
-                @if (status.isCritical) {
-                  ⚠️ ¡{{ cat.name }} necesita atención urgente!
-                } @else if (status.isHungry) {
-                  🍽️ {{ cat.name }} tiene hambre
-                } @else if (status.isTired) {
-                  😴 {{ cat.name }} está cansado
-                } @else if (status.isSad) {
-                  😿 {{ cat.name }} está triste
-                } @else if (status.isDirty) {
-                  🧼 {{ cat.name }} necesita un baño
+          <div class="grid gap-4 p-4 md:grid-cols-[190px_1fr]">
+            <!-- Panel STATUS -->
+            <aside class="pixel-frame space-y-2 bg-[hsl(230_20%_12%)] p-3 font-body">
+              <h2
+                class="border-b-2 border-white/40 pb-1 text-center font-display text-sm tracking-[0.2em] text-white/80"
+              >
+                STATUS
+              </h2>
+              <app-status-meter label="FELIZ" kind="hearts" [value]="cat.happiness" />
+              <app-status-meter label="SACIADO" [value]="cat.hunger" />
+              <app-status-meter label="ENERGÍA" [value]="cat.energy" />
+              <app-status-meter label="LIMPIO" [value]="cat.cleanliness" />
+              <div class="pt-1">
+                <app-level-badge [birthDate]="cat.birthDate" />
+              </div>
+            </aside>
+
+            <!-- Pantalla del michi -->
+            <div class="flex flex-col items-center justify-center gap-3">
+              <div
+                class="pixel-frame flex min-h-44 w-full items-center justify-center bg-[hsl(230_20%_14%)] p-4"
+                aria-hidden="true"
+              >
+                @if (cat.avatarUrl) {
+                  <img
+                    [src]="cat.avatarUrl"
+                    [alt]="cat.name"
+                    class="pixelated max-h-40 object-contain"
+                  />
                 } @else {
-                  ✨ {{ cat.name }} está feliz y saludable
+                  <pre class="font-display text-xl leading-snug text-white sm:text-2xl">
+    ／l、
+   （ﾟ､ ｡ ７
+    |、 ~ヽ
+    じしf_, )ノ</pre>
                 }
-              </p>
+              </div>
+              <p class="sr-only">{{ cat.name }}, especie {{ cat.species }}.</p>
+              <app-dialog-box class="w-full" [cat]="cat" [status]="status()" />
             </div>
-          }
-
-          <div class="space-y-3 mb-6">
-            <app-stat-bar label="Hambre" [value]="cat.hunger" />
-            <app-stat-bar label="Energía" [value]="cat.energy" />
-            <app-stat-bar label="Felicidad" [value]="cat.happiness" />
-            <app-stat-bar label="Limpieza" [value]="cat.cleanliness" />
           </div>
 
-          @if (feedMessage()) {
-            <div class="mb-4 p-3 rounded-md bg-green-50 border border-green-200 text-green-700 text-sm">
-              {{ feedMessage() }}
-            </div>
-          }
+          <app-action-bar [disabled]="!canAct()" (action)="onAction($event)" />
 
-          <div class="grid grid-cols-2 gap-3">
-            <button
-              (click)="onFeed()"
-              [disabled]="!canPerformAction()"
-              class="py-2 px-4 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              🍽️ Alimentar
-            </button>
-            <button
-              (click)="onPlay()"
-              [disabled]="!canPerformAction()"
-              class="py-2 px-4 bg-yellow-500 text-white rounded-md hover:bg-yellow-600 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              🎮 Jugar
-            </button>
-            <button
-              (click)="onClean()"
-              [disabled]="!canPerformAction()"
-              class="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              🧼 Limpiar
-            </button>
-            <button
-              (click)="onSleep()"
-              [disabled]="!canPerformAction()"
-              class="py-2 px-4 bg-purple-500 text-white rounded-md hover:bg-purple-600 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              😴 Dormir
-            </button>
+          <!-- Equipar del inventario -->
+          <div class="border-t-4 border-white/70 bg-[hsl(230_20%_12%)] p-3 font-body">
+            <h3 class="mb-2 font-display text-sm tracking-[0.2em] text-white/80">ACCESORIOS</h3>
+            @if (clothing().length === 0) {
+              <p class="text-xs text-white/60">No tienes ropa en tu inventario. ¡Pasá por la tienda!</p>
+            } @else {
+              <ul class="flex flex-wrap gap-2">
+                @for (entry of clothing(); track entry.id) {
+                  <li>
+                    <button
+                      type="button"
+                      (click)="toggleEquip(entry)"
+                      [disabled]="equipping()"
+                      [attr.aria-pressed]="isEquipped(entry.itemId)"
+                      [attr.aria-label]="
+                        (isEquipped(entry.itemId) ? 'Desequipar ' : 'Equipar ') + entry.item.name
+                      "
+                      class="min-h-11 border-2 px-2 py-1 text-xs text-white focus-visible:outline-2 focus-visible:outline-accent disabled:opacity-50"
+                      [class]="
+                        isEquipped(entry.itemId)
+                          ? 'border-accent bg-accent/20'
+                          : 'border-white/70 bg-[hsl(230_20%_18%)] hover:bg-[hsl(230_20%_24%)]'
+                      "
+                    >
+                      👕 {{ entry.item.name }}
+                    </button>
+                  </li>
+                }
+              </ul>
+            }
           </div>
-        </div>
+        </section>
+
+        @if (feedback(); as msg) {
+          <p class="mt-2 font-body text-sm text-success" role="status">{{ msg }}</p>
+        }
       </div>
     } @else {
-      <div class="text-center py-12 text-gray-500">Cargando michi...</div>
+      <p class="py-12 text-center font-body text-white/60">Cargando michi...</p>
     }
   `,
 })
 export class CatDetailComponent implements OnInit {
   private readonly catStore = inject(CatStore);
+  private readonly catService = inject(CatService);
   private readonly inventoryService = inject(InventoryService);
   private readonly router = inject(Router);
 
@@ -105,59 +133,102 @@ export class CatDetailComponent implements OnInit {
 
   readonly cat = this.catStore.selectedCat;
   readonly status = this.catStore.catStatus;
-  readonly feedMessage = signal<string | null>(null);
+
+  readonly clothing = signal<UserInventory[]>([]);
+  readonly feedback = signal<string | null>(null);
+  readonly equipping = signal(false);
 
   ngOnInit(): void {
     this.catStore.selectCat(this.catId());
+    this.inventoryService.getInventory().subscribe({
+      next: (items) =>
+        this.clothing.set(items.filter((e) => e.item.type === 'CLOTHING' && e.quantity > 0)),
+      error: () => this.clothing.set([]),
+    });
   }
 
-  canPerformAction(): boolean {
+  protected canAct(): boolean {
     const cat = this.cat();
-    return !!cat && cat.energy > 0;
+    return !!cat && cat.energy > 0 && cat.isAlive;
   }
 
-  onFeed(): void {
+  protected onAction(action: ConsoleAction): void {
     const cat = this.cat();
     if (!cat) return;
+    this.feedback.set(null);
 
-    this.feedMessage.set(null);
-    this.inventoryService.getInventory().subscribe({
-      next: (items) => {
-        const food = items.find((entry) => entry.item.type === 'FOOD' && entry.quantity > 0);
-        if (!food) {
-          this.feedMessage.set('No tienes comida en tu inventario. Visita la tienda.');
-          return;
+    switch (action) {
+      case 'feed':
+        this.feed(cat.id);
+        break;
+      case 'play':
+        this.catStore.playWithCat(cat.id);
+        break;
+      case 'clean':
+        this.catStore.cleanCat(cat.id);
+        break;
+      case 'sleep':
+        this.catStore.sleepCat(cat.id, 30);
+        break;
+    }
+  }
+
+  protected isEquipped(itemId: string): boolean {
+    return this.cat()?.equippedItems?.includes(itemId) ?? false;
+  }
+
+  protected toggleEquip(entry: UserInventory): void {
+    const cat = this.cat();
+    if (!cat || this.equipping()) return;
+
+    this.equipping.set(true);
+    const request = this.isEquipped(entry.itemId)
+      ? this.catService.unequipCat(cat.id, entry.itemId)
+      : this.catService.equipCat(cat.id, entry.itemId);
+
+    request.subscribe({
+      next: ({ cat: updated }) => {
+        if (updated) this.catStore.replaceCat(updated);
+        else if (this.isEquipped(entry.itemId)) {
+          this.catStore.replaceCat({
+            ...cat,
+            equippedItems: cat.equippedItems.filter((id) => id !== entry.itemId),
+          });
+        } else {
+          this.catStore.replaceCat({
+            ...cat,
+            equippedItems: [...(cat.equippedItems ?? []), entry.itemId],
+          });
         }
-        this.catStore.feedCat(cat.id, food.itemId);
+        this.equipping.set(false);
+        this.feedback.set(
+          this.isEquipped(entry.itemId)
+            ? `${entry.item.name} equipado ✨`
+            : `${entry.item.name} guardado en el bolso`,
+        );
       },
       error: () => {
-        this.feedMessage.set('No se pudo cargar el inventario para alimentar.');
+        this.equipping.set(false);
+        this.feedback.set('No se pudo cambiar el accesorio. Intentá de nuevo.');
       },
     });
   }
 
-  onPlay(): void {
-    const cat = this.cat();
-    if (cat) {
-      this.catStore.playWithCat(cat.id);
-    }
+  private feed(catId: string): void {
+    this.inventoryService.getInventory().subscribe({
+      next: (all) => {
+        const food = all.find((e) => e.item.type === 'FOOD' && e.quantity > 0);
+        if (!food) {
+          this.feedback.set('No tenés comida en el inventario. ¡Visitá la tienda!');
+          return;
+        }
+        this.catStore.feedCat(catId, food.itemId);
+      },
+      error: () => this.feedback.set('No se pudo cargar el inventario para alimentar.'),
+    });
   }
 
-  onClean(): void {
-    const cat = this.cat();
-    if (cat) {
-      this.catStore.cleanCat(cat.id);
-    }
-  }
-
-  onSleep(): void {
-    const cat = this.cat();
-    if (cat) {
-      this.catStore.sleepCat(cat.id, 30);
-    }
-  }
-
-  goBack(): void {
+  protected goBack(): void {
     this.router.navigate(['/dashboard']);
   }
 }

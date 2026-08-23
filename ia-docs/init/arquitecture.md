@@ -7,100 +7,62 @@ frontend/
 ├── src/
 │   ├── app/
 │   │   ├── core/                          # Singletons, guards, interceptores, modelos
-│   │   │   ├── guards/
-│   │   │   │   └── auth.guard.ts          # Guard para rutas protegidas
-│   │   │   ├── interceptors/
+│   │   │   ├── auth/
+│   │   │   │   ├── auth.guard.ts          # Guard para rutas protegidas
 │   │   │   │   ├── auth.interceptor.ts    # Adjunta Bearer token a requests
-│   │   │   │   └── error.interceptor.ts   # Manejo global de errores HTTP
-│   │   │   ├── models/
-│   │   │   │   ├── user.model.ts          # User, AuthResponse, LoginRequest
-│   │   │   │   ├── cat.model.ts           # Cat, CatStatus, CatAction
-│   │   │   │   ├── item.model.ts          # InventoryItem, UserInventory, ItemType, Rarity
-│   │   │   │   └── trivia.model.ts        # TriviaQuestion, TriviaAnswer, TriviaHistory
-│   │   │   └── services/
-│   │   │       └── api.service.ts         # Base HTTP service con interceptors
+│   │   │   │   ├── error.interceptor.ts   # Manejo global de errores HTTP y 401
+│   │   │   │   ├── auth.service.ts        # AuthService (user signal, login/register/logout)
+│   │   │   │   ├── auth.service.spec.ts
+│   │   │   │   └── auth.interceptor.ts
 │   │   │
 │   │   ├── features/                      # Módulos lazy-loaded por feature
-│   │   │   ├── auth/
-│   │   │   │   ├── login/
-│   │   │   │   │   └── login.component.ts
-│   │   │   │   ├── register/
-│   │   │   │   │   └── register.component.ts
-│   │   │   │   └── auth.routes.ts
-│   │   │   ├── dashboard/
-│   │   │   │   ├── dashboard.component.ts
-│   │   │   │   ├── cat-card/
-│   │   │   │   │   └── cat-card.component.ts
-│   │   │   │   └── dashboard.routes.ts
-│   │   │   ├── cat-detail/
-│   │   │   │   ├── cat-detail.component.ts
-│   │   │   │   ├── actions-panel/
-│   │   │   │   │   └── actions-panel.component.ts
-│   │   │   │   ├── inventory-equip/
-│   │   │   │   │   └── inventory-equip.component.ts
-│   │   │   │   └── cat-detail.routes.ts
-│   │   │   ├── shop/
-│   │   │   │   ├── shop.component.ts
-│   │   │   │   ├── item-card/
-│   │   │   │   │   └── item-card.component.ts
-│   │   │   │   └── shop.routes.ts
-│   │   │   ├── inventory/
-│   │   │   │   ├── inventory.component.ts
-│   │   │   │   └── inventory.routes.ts
-│   │   │   ├── trivia/
-│   │   │   │   ├── trivia.component.ts
-│   │   │   │   ├── question-card/
-│   │   │   │   │   └── question-card.component.ts
-│   │   │   │   └── trivia.routes.ts
-│   │   │   ├── adopt/
-│   │   │   │   ├── adopt.component.ts
-│   │   │   │   ├── ai-cat-generator/
-│   │   │   │   │   └── ai-cat-generator.component.ts
-│   │   │   │   └── adopt.routes.ts
-│   │   │   └── profile/
-│   │   │       ├── profile.component.ts
-│   │   │       └── profile.routes.ts
+│   │   │   ├── auth/                      # login, register (tema pixel, sin shell)
+│   │   │   ├── dashboard/                 # Dashboard selector + cat-card + adopt-form
+│   │   │   │   └── cat-detail/            # Consola Tamagotchi
+│   │   │   │       └── console/
+│   │   │   │           ├── console-top-bar/  # Fecha, nombre, hora (ClockService)
+│   │   │   │           ├── status-meter/     # Barras de 5 celdas (hearts/squares)
+│   │   │   │           ├── level-badge/      # LV + EXP decorativa desde birthDate
+│   │   │   │           ├── dialog-box/       # Mensajes según estado del michi
+│   │   │   │           └── action-bar/       # ALIMENTAR/LIMPIAR/DORMIR/JUGAR
+│   │   │   ├── ai-cat-generator/         # Generador de michis con IA
+│   │   │   ├── shop/                      # Tienda (catálogo y compra)
+│   │   │   ├── inventory/                 # Inventario del usuario
+│   │   │   └── trivia/                    # Trivia cósmica con IA
 │   │   │
-│   │   ├── shared/                        # Componentes, directivas y pipes reutilizables
-│   │   │   ├── components/
-│   │   │   │   ├── coin-display/
-│   │   │   │   │   └── coin-display.component.ts
-│   │   │   │   ├── stat-bar/
-│   │   │   │   │   └── stat-bar.component.ts
-│   │   │   │   ├── loading-spinner/
-│   │   │   │   │   └── loading-spinner.component.ts
-│   │   │   │   ├── toast-notification/
-│   │   │   │   │   └── toast-notification.component.ts
-│   │   │   │   └── confirm-dialog/
-│   │   │   │       └── confirm-dialog.component.ts
-│   │   │   ├── directives/
-│   │   │   │   └── animate-on-change.directive.ts
-│   │   │   └── pipes/
-│   │   │       ├── rarity-color.pipe.ts
-│   │   │       └── stat-label.pipe.ts
+│   │   ├── models/                        # Tipos e interfaces (cat, user, item, ai)
+│   │   ├── services/                      # CatService, CatStore, ShopService,
+│   │   │   │                              # InventoryService, AiService, UserService,
+│   │   │   │                              # UploadService, ClockService
 │   │   │
-│   │   ├── stores/                        # Angular Signals Stores (estado global)
-│   │   │   ├── auth.store.ts
-│   │   │   ├── cat.store.ts
-│   │   │   └── shop.store.ts
+│   │   ├── shared/
+│   │   │   ├── components/                # item-card, skeleton, stat-bar
+│   │   │   └── layout/                    # shell (nav-rail + profile-card sin navbar)
+│   │   │       ├── nav-rail/              # Rail flotante (dock inferior en mobile)
+│   │   │       └── profile-card/          # Perfil flotante (avatar, monedas, logout)
 │   │   │
-│   │   ├── app.component.ts              # Componente raíz
-│   │   ├── app.config.ts                 # Configuración de providers
-│   │   └── app.routes.ts                 # Definición de rutas principales
+│   │   ├── app.ts / app.html / app.config.ts / app.routes.ts
 │   │
-│   ├── environments/
-│   │   ├── environment.ts
-│   │   └── environment.prod.ts
-│   │
-│   └── styles.scss                       # Estilos globales + Tailwind
+│   ├── environments/                      # environment.ts / environment.development.ts
+│   ├── index.html                         # Fuentes retro (5 familias Google Fonts)
+│   ├── main.ts
+│   └── styles.css                         # Tokens Tailwind 4 + pixel-frame + starfield
 │
 ├── angular.json
 ├── package.json
-├── tsconfig.json
-├── tsconfig.app.json
-├── tsconfig.spec.json
-└── .prettierrc
+├── proxy.conf.json                        # /api → localhost:3000
+└── tsconfig*.json
 ```
+
+### Diseño (feature 006 — UI Tamagotchi Pixel Art)
+
+El tema visual es pixel/retro sobre el backdrop galaxia:
+
+- **Tokens** (`styles.css` `@theme`): `--color-background/card/foreground/...`, `--font-display` (VT323) y `--font-body` (Quantico) intercambiables vía CSS purá.
+- **`.pixel-frame`**: marco escalonado con múltiples box-shadows (CSS puro, sin librerías).
+- **`.pixelated`**: `image-rendering: pixelated` para pixel art nítido.
+- **Starfield v2**: capas estáticas + 2 capas titilantes con fases distintas, respetando `prefers-reduced-motion`.
+- **Accesibilidad**: aria-labels en todos los botones pixel, focus-visible, tap targets ≥ 44px, `role` semántico.
 
 ---
 
@@ -161,36 +123,48 @@ async feedCat(catId: string, itemId: string) {
 ```typescript
 // app.routes.ts
 export const routes: Routes = [
-  { path: 'login',    loadComponent: () => import('./features/auth/login/login.component') },
-  { path: 'register', loadComponent: () => import('./features/auth/register/register.component') },
   {
-    path: '',
+    path: 'auth',                        // Login/register SIN shell ni guard
+    children: [
+      { path: 'login',    loadComponent: () => import('./features/auth/login/login.component') },
+      { path: 'register', loadComponent: () => import('./features/auth/register/register.component') },
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+    ],
+  },
+  {
+    path: 'dashboard',                   // Rutas autenticadas (canActivate)
+    loadComponent: () => import('./shared/layout/shell/shell.component'),
     canActivate: [authGuard],
     children: [
-      { path: 'dashboard',  loadComponent: () => import('./features/dashboard/dashboard.component') },
-      { path: 'adopt',      loadComponent: () => import('./features/adopt/adopt.component') },
-      { path: 'cat/:id',    loadComponent: () => import('./features/cat-detail/cat-detail.component') },
-      { path: 'shop',       loadComponent: () => import('./features/shop/shop.component') },
-      { path: 'inventory',  loadComponent: () => import('./features/inventory/inventory.component') },
-      { path: 'trivia',     loadComponent: () => import('./features/trivia/trivia.component') },
-      { path: 'profile',    loadComponent: () => import('./features/profile/profile.component') },
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-    ]
+      { path: '',            loadComponent: () => import('./features/dashboard/dashboard.component') },
+      { path: 'cat/:id',     loadComponent: () => import('./features/dashboard/cat-detail/cat-detail.component') },
+      { path: 'shop',        loadComponent: () => import('./features/shop/shop.component') },
+      { path: 'inventory',   loadComponent: () => import('./features/inventory/inventory.component') },
+      { path: 'trivia',      loadComponent: () => import('./features/trivia/trivia.component') },
+      { path: 'ai-generator', loadComponent: () => import('./features/dashboard/ai-cat-generator/ai-cat-generator.component') },
+    ],
   },
-  { path: '**', redirectTo: 'dashboard' }
+  { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
+  { path: '**', redirectTo: '/auth/login' },
 ];
 ```
 
 ### Guard de auth
 
 ```typescript
-// core/guards/auth.guard.ts
-export const authGuard = () => {
-  const auth = inject(AuthService);
+// core/auth/auth.guard.ts
+export const authGuard: CanActivateFn = () => {
+  const authService = inject(AuthService);
   const router = inject(Router);
-  return auth.isAuthenticated() ? true : router.createUrlTree(['/login']);
+  return authService.isAuthenticated()
+    ? true
+    : (router.navigate(['/auth/login']), false);
 };
 ```
+
+### Shell (feature 006)
+
+`ShellComponent` envuelve las rutas hijas de `/dashboard` y renderiza `app-nav-rail` + `app-profile-card` (no hay navbar superior). Login/register quedan fuera del shell, así no muestran rail ni perfil.
 
 ---
 

@@ -60,6 +60,10 @@ export class CatStore implements OnDestroy {
     this.selectedCatIdSignal.set(id);
   }
 
+  replaceCat(cat: Cat): void {
+    this.catsSignal.update((list) => list.map((c) => (c.id === cat.id ? cat : c)));
+  }
+
   adoptCat(data: CreateCatRequest): void {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);

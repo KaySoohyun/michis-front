@@ -9,10 +9,11 @@ Orden y estado de las features. Cada entrada apunta a su carpeta en `features/`.
 3. **003 · Tienda e Inventario** — Catálogo de ítems, compra, inventario, equipamiento de accesorios.
 4. **004 · Integración de IA** — Trivia cósmica, generación de michis únicos con Gemini AI.
 5. **005 · Imágenes, Polish y Despliegue** — Cloudinary upload, skeleton loading, testing unitario.
+6. **006 · UI Tamagotchi Pixel Art** — Consola retro (status panel, LV cosmético, caja de diálogo, action-bar), rail flotante, profile-card sin navbar, dashboard como selector compacto, login/register en tema pixel.
 
 ## Siguiente 🔜
 
-6. **006 · UI Tamagotchi Pixel Art** — Rediseño consola retro: status panel de 4 stats, LV cosmético, caja de diálogo, rail flotante (tienda/inventario/trivia/adoptar) y card de perfil sin navbar.
+- **Sistema real de XP/niveles persistido** — ver backlog.
 
 ## Backlog / ideas 💡
 

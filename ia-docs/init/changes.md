@@ -1,6 +1,19 @@
 # Registro de cambios
 
-Cambios significativos / bugs corregidos en `ia-docs/init/changes.md`.
+Cambios significativos / bugs corregidos en `ia-docs/init/changes.md` (los más recientes al final).
+
+## 2026-08-22 — Feature 006: UI Tamagotchi Pixel Art completa
+
+Se terminó la feature 006 (ver `ia-docs/features/006-tamagotchi-ui/`), dejando toda la interfaz en tema pixel/galaxia.
+
+- **Consola (`/dashboard/cat/:id`)**: marco pixel, top-bar con fecha/nombre/hora vía `ClockService`, status panel de 4 stats en celdas (HAPPY con corazones), LV + EXP decorativa desde `birthDate`, caja de diálogo según estado, action-bar con ALIMENTAR/LIMPIAR/DORMIR/JUGAR y equipamiento de CLOTHING.
+- **Shell sin navbar**: `shell.component.ts` renderiza `nav-rail` flotante (dock inferior en mobile) + `profile-card` flotante con avatar, nombre, monedas y logout. Login/register quedan fuera del shell (sin rail ni perfil).
+- **Dashboard como selector compacto**: 3 slots por slotNumber, cada michi como `cat-card` pixel con mini-stats y LV; slots libres con botón ADOPTAR.
+- **Tema pixel en todas las vistas autenticadas**: shop, inventory, trivia y ai-generator pasaron de cards blancas (`bg-white`/`text-gray-900`) a `pixel-frame` oscuro con botones y textos adaptados (resuelve el pendiente anotado el 2026-08-22: "navbar y cards siguen con fondo claro").
+- **Login/register en tema pixel** — fondo galaxia, marco pixel y fuentes retrofit.
+- **Bugfix build**: imports relativos rotos en `console/*` (`../../../../models`, `../../../../services/clock.service` → ahora `../../../../../...`) y `buttons` privado no accesible desde template en `action-bar` (ahora `protected`).
+- **Skeleton** reestilizado a pixel para el loading del dashboard.
+- `npm test` verde (3 archivos / 6 tests) y `npm run build` correcto.
 
 ## 2026-08-22 — Starfield galáctico (estrellas en el fondo)
 

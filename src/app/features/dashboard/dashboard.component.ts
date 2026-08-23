@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CatStore } from '../../services/cat.store';
 import { CatCardComponent } from './cat-card/cat-card.component';
 import { AdoptFormComponent } from './adopt-form/adopt-form.component';
@@ -8,18 +8,19 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
   selector: 'app-dashboard',
   imports: [CatCardComponent, AdoptFormComponent, SkeletonComponent],
   template: `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">Mis Michis</h1>
-        @if (catStore.availableSlots() > 0 && !showAdoptForm()) {
+    <div class="mx-auto max-w-5xl px-4 py-8 font-body sm:px-6">
+      <header class="mb-6 flex items-center justify-between gap-4">
+        <h1 class="font-display text-2xl tracking-[0.2em] text-white">MIS MICHIS</h1>
+        @if (canAdopt() && !showAdoptForm()) {
           <button
+            type="button"
             (click)="showAdoptForm.set(true)"
-            class="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+            class="border-2 border-white/70 bg-[hsl(262_83%_58%)] px-3 py-1.5 font-display text-sm tracking-wider text-white hover:bg-[hsl(262_83%_65%)] focus-visible:outline-2 focus-visible:outline-accent"
           >
-            Adoptar michi ({{ catStore.availableSlots() }} slots)
+            + ADOPTAR
           </button>
         }
-      </div>
+      </header>
 
       @if (showAdoptForm()) {
         <div class="mb-6">
@@ -28,29 +29,40 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
       }
 
       @if (catStore.loading()) {
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           @for (i of [1, 2, 3]; track i) {
             <app-skeleton />
           }
         </div>
       } @else if (catStore.error()) {
-        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
+        <p
+          class="pixel-frame bg-[hsl(0_60%_40%)] px-4 py-3 font-body text-sm text-white"
+          role="alert"
+        >
           {{ catStore.error() }}
-        </div>
-      } @else if (catStore.cats().length === 0) {
-        <div class="text-center py-12">
-          <p class="text-gray-500 text-lg mb-4">No tienes michis aún</p>
-          <button
-            (click)="showAdoptForm.set(true)"
-            class="py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-          >
-            Adoptar tu primer michi 🐱
-          </button>
-        </div>
+        </p>
       } @else {
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          @for (cat of catStore.cats(); track cat.id) {
-            <app-cat-card [cat]="cat" (onRelease)="onRelease($event)" />
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          @for (slot of slots(); track slot.slotNumber) {
+            @if (slot.cat; as cat) {
+              <app-cat-card [cat]="cat" (onRelease)="onRelease($event)" />
+            } @else {
+              <div
+                class="pixel-frame flex min-h-44 flex-col items-center justify-center gap-2 bg-[hsl(230_20%_12%_/_0.6)] p-4 text-center"
+              >
+                <p class="font-display text-lg tracking-widest text-white/60">
+                  SLOT {{ slot.slotNumber }}
+                </p>
+                <p class="text-xs text-white/50">Libre</p>
+                <button
+                  type="button"
+                  (click)="showAdoptForm.set(true)"
+                  class="mt-2 border-2 border-white/70 bg-[hsl(230_20%_24%)] px-3 py-1.5 font-display text-sm tracking-wider text-white hover:bg-[hsl(230_20%_30%)] focus-visible:outline-2 focus-visible:outline-accent"
+                >
+                  ADOPTAR
+                </button>
+              </div>
+            }
           }
         </div>
       }
@@ -61,11 +73,21 @@ export default class DashboardComponent implements OnInit {
   readonly catStore = inject(CatStore);
   readonly showAdoptForm = signal(false);
 
+  protected readonly canAdopt = computed(() => this.catStore.availableSlots() > 0);
+
+  protected readonly slots = computed(() => {
+    const cats = this.catStore.cats();
+    return [1, 2, 3].map((slotNumber) => ({
+      slotNumber,
+      cat: cats.find((c) => c.slotNumber === slotNumber) ?? null,
+    }));
+  });
+
   ngOnInit(): void {
     this.catStore.loadCats();
   }
 
-  onRelease(catId: string): void {
+  protected onRelease(catId: string): void {
     if (confirm('¿Estás seguro de liberar a este michi?')) {
       this.catStore.releaseCat(catId);
     }

@@ -6,89 +6,105 @@ import { GeneratedCat } from '../../../models';
 @Component({
   selector: 'app-ai-cat-generator',
   template: `
-    <div class="bg-white rounded-lg shadow-md p-6">
-      <h2 class="text-lg font-semibold text-gray-900 mb-4">🔮 Generador de Michis Cósmicos</h2>
+    <div class="mx-auto max-w-2xl px-4 py-8 font-body sm:px-6">
+      <h1 class="mb-6 font-display text-2xl tracking-[0.2em] text-white">GENERADOR CÓSMICO</h1>
 
-      <form (submit)="onGenerate($event)" class="space-y-4 mb-6">
-        <div>
-          <label for="theme" class="block text-sm font-medium text-gray-700">Temática (opcional)</label>
-          <input
-            id="theme"
-            type="text"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
-            placeholder="Ej: volcánico, acuático, celeste..."
-          />
-        </div>
+      <div class="pixel-frame bg-[hsl(230_25%_10%)] p-6">
+        <h2 class="mb-4 font-display text-lg tracking-wider text-accent">
+          🔮 GENERAR MICHIS ÚNICOS
+        </h2>
 
-        <div>
-          <label for="difficulty" class="block text-sm font-medium text-gray-700">Rareza</label>
-          <select
-            id="difficulty"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+        <form (submit)="onGenerate($event)" class="mb-6 space-y-4">
+          <div>
+            <label for="theme" class="mb-1 block font-display text-sm tracking-wider text-white/80">
+              TEMÁTICA (OPCIONAL)
+            </label>
+            <input
+              id="theme"
+              type="text"
+              autocomplete="off"
+              placeholder="Ej: volcánico, acuático, celeste..."
+              class="w-full border-2 border-white/70 bg-[hsl(230_20%_14%)] px-3 py-2 text-sm text-white placeholder:text-white/40 focus-visible:outline-2 focus-visible:outline-accent"
+            />
+          </div>
+
+          <div>
+            <label for="difficulty" class="mb-1 block font-display text-sm tracking-wider text-white/80">
+              RAREZA
+            </label>
+            <select
+              id="difficulty"
+              class="w-full border-2 border-white/70 bg-[hsl(230_20%_14%)] px-3 py-2 text-sm text-white focus-visible:outline-2 focus-visible:outline-accent"
+            >
+              <option value="common" class="bg-[hsl(230_25%_10%)]">Común</option>
+              <option value="rare" class="bg-[hsl(230_25%_10%)]">Raro</option>
+              <option value="legendary" class="bg-[hsl(230_25%_10%)]">Legendario</option>
+            </select>
+          </div>
+
+          <button
+            type="submit"
+            [disabled]="aiService.loading()"
+            class="w-full border-2 border-white/70 bg-[hsl(262_83%_58%)] px-4 py-2 font-display tracking-widest text-white hover:bg-[hsl(262_83%_65%)] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-accent"
           >
-            <option value="common">Común</option>
-            <option value="rare">Raro</option>
-            <option value="legendary">Legendario</option>
-          </select>
-        </div>
+            @if (aiService.loading()) {
+              GENERANDO...
+            } @else {
+              GENERAR ✨
+            }
+          </button>
+        </form>
 
-        <button
-          type="submit"
-          [disabled]="aiService.loading()"
-          class="w-full py-2 px-4 bg-purple-600 text-white rounded-md hover:bg-purple-700 disabled:opacity-50"
-        >
-          @if (aiService.loading()) {
-            Generando...
-          } @else {
-            Generar Michi ✨
-          }
-        </button>
-      </form>
-
-      @if (generatedCat(); as cat) {
-        <div class="border-t pt-6">
-          <div class="flex items-center gap-4 mb-4">
-            <div class="w-16 h-16 rounded-full flex items-center justify-center text-3xl"
-                 [style.background-color]="cat.suggestedColorPalette[0] || '#e0e7ff'">
-              🐱
+        @if (generatedCat(); as cat) {
+          <div class="border-t-2 border-white/40 pt-5">
+            <div class="mb-4 flex items-center gap-4">
+              <div
+                class="grid size-16 place-items-center rounded-full text-3xl"
+                [style.background-color]="cat.suggestedColorPalette[0] || '#6d5bd0'"
+                aria-hidden="true"
+              >
+                🐱
+              </div>
+              <div>
+                <h3 class="font-display text-xl text-white">{{ cat.name }}</h3>
+                <p class="text-sm text-white/70">{{ cat.species }}</p>
+              </div>
             </div>
-            <div>
-              <h3 class="text-xl font-bold text-gray-900">{{ cat.name }}</h3>
-              <p class="text-sm text-gray-600">{{ cat.species }}</p>
+
+            <div class="mb-4 space-y-3 text-sm">
+              <div>
+                <span class="font-display tracking-wider text-white/80">PERSONALIDAD:</span>
+                <p class="text-white/70">{{ cat.personality }}</p>
+              </div>
+              <div>
+                <span class="font-display tracking-wider text-white/80">HISTORIA:</span>
+                <p class="text-white/70">{{ cat.lore }}</p>
+              </div>
+              <div>
+                <span class="font-display tracking-wider text-white/80">APARIENCIA:</span>
+                <p class="text-white/70">{{ cat.appearanceDescription }}</p>
+              </div>
+            </div>
+
+            <div class="flex gap-2">
+              <button
+                type="button"
+                (click)="onAdopt(cat)"
+                class="flex-1 border-2 border-white/70 bg-[hsl(262_83%_58%)] px-4 py-2 font-display tracking-wider text-white hover:bg-[hsl(262_83%_65%)] focus-visible:outline-2 focus-visible:outline-accent"
+              >
+                ADOPTAR ESTE MICHI
+              </button>
+              <button
+                type="button"
+                (click)="onClear()"
+                class="border-2 border-white/70 bg-[hsl(230_20%_20%)] px-4 py-2 font-display tracking-wider text-white hover:bg-[hsl(230_20%_26%)] focus-visible:outline-2 focus-visible:outline-accent"
+              >
+                LIMPIAR
+              </button>
             </div>
           </div>
-
-          <div class="space-y-3 mb-4">
-            <div>
-              <span class="text-sm font-medium text-gray-700">Personalidad:</span>
-              <p class="text-sm text-gray-600">{{ cat.personality }}</p>
-            </div>
-            <div>
-              <span class="text-sm font-medium text-gray-700">Historia:</span>
-              <p class="text-sm text-gray-600">{{ cat.lore }}</p>
-            </div>
-            <div>
-              <span class="text-sm font-medium text-gray-700">Apariencia:</span>
-              <p class="text-sm text-gray-600">{{ cat.appearanceDescription }}</p>
-            </div>
-          </div>
-
-          <div class="flex gap-2">
-            <button
-              (click)="onAdopt(cat)"
-              class="flex-1 py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              Adoptar este michi
-            </button>
-            <button
-              (click)="onClear()"
-              class="py-2 px-4 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50"
-            >
-              Limpiar
-            </button>
-          </div>
-        </div>
-      }
+        }
+      </div>
     </div>
   `,
 })
@@ -102,7 +118,10 @@ export class AiCatGeneratorComponent {
     event.preventDefault();
     const form = event.target as HTMLFormElement;
     const theme = (form.elements.namedItem('theme') as HTMLInputElement).value || undefined;
-    const difficulty = (form.elements.namedItem('difficulty') as HTMLSelectElement).value as 'common' | 'rare' | 'legendary';
+    const difficulty = (form.elements.namedItem('difficulty') as HTMLSelectElement).value as
+      | 'common'
+      | 'rare'
+      | 'legendary';
 
     this.aiService.generateCat({ theme, difficulty }).subscribe();
   }

@@ -6,56 +6,63 @@ import { AuthService } from '../../../core/auth/auth.service';
   selector: 'app-login',
   imports: [RouterLink],
   template: `
-    <div class="min-h-screen flex items-center justify-center bg-gray-50">
-      <div class="max-w-md w-full space-y-8 p-8">
-        <div>
-          <h1 class="text-center text-3xl font-bold text-gray-900">Michis Galácticos</h1>
-          <h2 class="mt-2 text-center text-sm text-gray-600">Iniciar Sesión</h2>
+    <div class="flex min-h-screen items-center justify-center px-4 py-8">
+      <div class="pixel-frame w-full max-w-md bg-[hsl(230_25%_10%)] p-6 font-body sm:p-8">
+        <div class="mb-6 text-center">
+          <div class="mb-2 text-4xl" aria-hidden="true">🐱</div>
+          <h1 class="font-display text-3xl tracking-widest text-white">MICHIS</h1>
+          <p class="font-display text-xl tracking-widest text-accent">INTERGALÁCTICOS</p>
         </div>
 
         @if (authService.error()) {
-          <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          <p
+            class="mb-4 border-2 border-[hsl(0_84%_60%)] bg-[hsl(0_60%_40%)] px-3 py-2 text-sm text-white"
+            role="alert"
+          >
             {{ authService.error() }}
-          </div>
+          </p>
         }
 
-        <form (submit)="onSubmit($event)" class="mt-8 space-y-6">
-          <div class="space-y-4">
-            <div>
-              <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-              <input
-                id="email"
-                type="email"
-                required
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
-            <div>
-              <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
-              <input
-                id="password"
-                type="password"
-                required
-                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-            </div>
+        <form (submit)="onSubmit($event)" class="space-y-4">
+          <div>
+            <label for="email" class="mb-1 block font-display text-sm tracking-wider text-white/80">
+              EMAIL
+            </label>
+            <input
+              id="email"
+              type="email"
+              required
+              autocomplete="email"
+              class="w-full border-2 border-white/70 bg-[hsl(230_20%_14%)] px-3 py-2 text-sm text-white placeholder:text-white/40 focus-visible:outline-2 focus-visible:outline-accent"
+            />
+          </div>
+          <div>
+            <label for="password" class="mb-1 block font-display text-sm tracking-wider text-white/80">
+              CONTRASEÑA
+            </label>
+            <input
+              id="password"
+              type="password"
+              required
+              autocomplete="current-password"
+              class="w-full border-2 border-white/70 bg-[hsl(230_20%_14%)] px-3 py-2 text-sm text-white placeholder:text-white/40 focus-visible:outline-2 focus-visible:outline-accent"
+            />
           </div>
 
           <button
             type="submit"
             [disabled]="authService.loading()"
-            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            class="w-full border-2 border-white/70 bg-[hsl(262_83%_58%)] px-4 py-2 font-display tracking-widest text-white hover:bg-[hsl(262_83%_65%)] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-accent"
           >
-            @if (authService.loading()) {
-              Iniciando sesión...
-            } @else {
-              Iniciar Sesión
-            }
+            {{ authService.loading() ? 'ACCEDIENDO...' : 'INICIAR SESIÓN' }}
           </button>
 
-          <p class="text-center text-sm text-gray-600">
+          <p class="text-center text-sm text-white/70">
             ¿No tienes cuenta?
-            <a routerLink="/auth/register" class="font-medium text-blue-600 hover:text-blue-500">Regístrate</a>
+            <a
+              routerLink="/auth/register"
+              class="text-accent underline hover:text-[hsl(45_93%_55%)]"
+            >REGISTRATE</a>
           </p>
         </form>
       </div>

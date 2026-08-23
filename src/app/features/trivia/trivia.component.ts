@@ -13,66 +13,78 @@ interface TriviaResult {
 @Component({
   selector: 'app-trivia',
   template: `
-    <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-900">🌟 Trivia Cósmica</h1>
-        <div class="text-lg font-medium text-yellow-600">💰 {{ userService.coins() }}</div>
-      </div>
+    <div class="mx-auto max-w-2xl px-4 py-8 font-body sm:px-6">
+      <header class="mb-6 flex flex-wrap items-center justify-between gap-4">
+        <h1 class="font-display text-2xl tracking-[0.2em] text-white">TRIVIA CÓSMICA</h1>
+        <p class="font-display text-lg text-accent">
+          <span aria-hidden="true">🪙</span>
+          <span class="sr-only">Monedas:</span> {{ userService.coins() }}
+        </p>
+      </header>
 
       @if (showResult()) {
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div class="pixel-frame bg-[hsl(230_25%_10%)] p-6">
           <div class="text-center">
             @if (lastResult()?.correct) {
-              <div class="text-4xl mb-4">🎉</div>
-              <h2 class="text-xl font-bold text-green-700 mb-2">¡Correcto!</h2>
-              <p class="text-gray-600">Ganaste {{ lastResult()?.coinsEarned }} monedas</p>
+              <div class="mb-4 text-4xl" aria-hidden="true">🎉</div>
+              <h2 class="mb-2 font-display text-xl tracking-wider text-success">¡CORRECTO!</h2>
+              <p class="text-white/80">Ganaste {{ lastResult()?.coinsEarned }} monedas</p>
             } @else {
-              <div class="text-4xl mb-4">😿</div>
-              <h2 class="text-xl font-bold text-red-700 mb-2">Incorrecto</h2>
-              <p class="text-gray-600">La respuesta correcta era: {{ lastResult()?.correctAnswer }}</p>
+              <div class="mb-4 text-4xl" aria-hidden="true">😿</div>
+              <h2 class="mb-2 font-display text-xl tracking-wider text-danger">INCORRECTO</h2>
+              <p class="text-white/80">
+                La respuesta correcta era: {{ lastResult()?.correctAnswer }}
+              </p>
             }
-            <p class="text-sm text-gray-500 mt-4">{{ lastResult()?.explanation }}</p>
+            <p class="mt-4 text-sm text-white/60">{{ lastResult()?.explanation }}</p>
             <button
+              type="button"
               (click)="loadNewTrivia()"
-              class="mt-6 py-2 px-6 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+              class="mt-6 border-2 border-white/70 bg-[hsl(262_83%_58%)] px-6 py-2 font-display tracking-wider text-white hover:bg-[hsl(262_83%_65%)] focus-visible:outline-2 focus-visible:outline-accent"
             >
-              Siguiente pregunta
+              SIGUIENTE
             </button>
           </div>
         </div>
       } @else if (aiService.loading()) {
-        <div class="text-center py-12 text-gray-500">Generando pregunta...</div>
+        <p class="py-12 text-center text-white/60">Generando pregunta...</p>
       } @else if (trivia(); as q) {
-        <div class="bg-white rounded-lg shadow-md p-6">
-          <div class="flex items-center gap-2 mb-4">
-            <span class="text-xs px-2 py-1 rounded-full bg-purple-100 text-purple-700">{{ q.category }}</span>
-            <span class="text-xs px-2 py-1 rounded-full bg-blue-100 text-blue-700">{{ q.difficulty }}</span>
-            <span class="text-xs text-gray-500 ml-auto">💰 {{ q.rewardCoins }} monedas</span>
+        <div class="pixel-frame bg-[hsl(230_25%_10%)] p-6">
+          <div class="mb-4 flex flex-wrap items-center gap-2">
+            <span class="bg-[hsl(262_83%_45%)] px-2 py-0.5 font-display text-xs tracking-wider text-white">
+              {{ q.category }}
+            </span>
+            <span class="bg-[hsl(199_89%_38%)] px-2 py-0.5 font-display text-xs tracking-wider text-white">
+              {{ q.difficulty }}
+            </span>
+            <span class="ml-auto font-display text-sm text-accent">🪙 {{ q.rewardCoins }}</span>
           </div>
 
-          <h2 class="text-lg font-semibold text-gray-900 mb-6">{{ q.question }}</h2>
+          <h2 class="mb-6 font-display text-lg leading-snug text-white">{{ q.question }}</h2>
 
           <div class="space-y-3">
             @for (option of q.options; track $index) {
               <button
+                type="button"
                 (click)="onAnswer($index)"
                 [disabled]="answered()"
-                class="w-full text-left p-4 border rounded-lg transition-colors"
+                class="w-full border-2 border-white/70 bg-[hsl(230_20%_14%)] p-4 text-left text-white transition-colors disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent"
                 [class]="getOptionClass($index)"
               >
-                <span class="font-medium">{{ $index + 1 }}.</span> {{ option }}
+                <span class="font-display">{{ $index + 1 }}.</span> {{ option }}
               </button>
             }
           </div>
         </div>
       } @else {
-        <div class="text-center py-12">
-          <p class="text-gray-500 mb-4">No hay preguntas disponibles</p>
+        <div class="py-12 text-center">
+          <p class="mb-4 text-white/60">No hay preguntas disponibles</p>
           <button
+            type="button"
             (click)="loadNewTrivia()"
-            class="py-2 px-6 bg-purple-600 text-white rounded-md hover:bg-purple-700"
+            class="border-2 border-white/70 bg-[hsl(262_83%_58%)] px-6 py-2 font-display tracking-wider text-white hover:bg-[hsl(262_83%_65%)] focus-visible:outline-2 focus-visible:outline-accent"
           >
-            Generar pregunta
+            GENERAR PREGUNTA
           </button>
         </div>
       }
@@ -132,20 +144,22 @@ export default class TriviaComponent implements OnInit {
 
   getOptionClass(index: number): string {
     if (!this.answered()) {
-      return 'border-gray-200 hover:border-purple-300 hover:bg-purple-50';
+      return 'hover:bg-[hsl(262_83%_35%_/_0.4)]';
     }
 
     const trivia = this.trivia();
-    if (!trivia) return 'border-gray-200';
+    if (!trivia) return '';
 
     const correct = this.lastResult()?.correctAnswer;
     if (index === this.selectedAnswer() && correct !== undefined) {
       const isCorrect = trivia.options[index] === correct;
-      return isCorrect ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50';
+      return isCorrect
+        ? 'border-success bg-[hsl(142_71%_35%_/_0.4)]'
+        : 'border-danger bg-[hsl(0_84%_60%_/_0.4)]';
     }
     if (correct !== undefined && trivia.options[index] === correct) {
-      return 'border-green-500 bg-green-50';
+      return 'border-success bg-[hsl(142_71%_35%_/_0.4)]';
     }
-    return 'border-gray-200 opacity-50';
+    return 'opacity-50';
   }
 }

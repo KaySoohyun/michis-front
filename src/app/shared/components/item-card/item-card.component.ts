@@ -4,29 +4,35 @@ import { InventoryItem, Rarity } from '../../../models';
 @Component({
   selector: 'app-item-card',
   template: `
-    <div class="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow">
-      <div class="flex items-start justify-between mb-2">
-        <div class="w-12 h-12 rounded-full flex items-center justify-center text-2xl"
-             [class]="rarityBg()">
+    <div class="pixel-frame flex h-full flex-col bg-[hsl(230_20%_12%)] p-3 font-body">
+      <div class="mb-2 flex items-start justify-between">
+        <div
+          class="grid size-12 place-items-center bg-[hsl(230_20%_18%)] text-2xl"
+          [class]="rarityBg()"
+          aria-hidden="true"
+        >
           🎁
         </div>
-        <span class="text-xs px-2 py-1 rounded-full"
-              [class]="rarityClass()">
+        <span
+          class="px-2 py-0.5 font-display text-xs tracking-wider"
+          [class]="rarityClass()"
+        >
           {{ item().rarity }}
         </span>
       </div>
 
-      <h3 class="font-semibold text-gray-900 mb-1">{{ item().name }}</h3>
-      <p class="text-xs text-gray-500 mb-2">{{ item().type }}</p>
-      <p class="text-sm text-gray-600 mb-3 line-clamp-2">{{ item().description }}</p>
+      <h3 class="mb-1 font-display text-lg text-white">{{ item().name }}</h3>
+      <p class="mb-2 font-body text-xs uppercase tracking-wider text-white/60">{{ item().type }}</p>
+      <p class="mb-3 line-clamp-2 text-sm text-white/70">{{ item().description }}</p>
 
-      <div class="flex items-center justify-between">
-        <span class="text-lg font-bold text-yellow-600">💰 {{ item().price }}</span>
+      <div class="mt-auto flex items-center justify-between pt-2">
+        <span class="font-display text-lg text-accent">🪙 {{ item().price }}</span>
         <button
+          type="button"
           (click)="onBuy.emit(item().id)"
-          class="py-1.5 px-3 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
+          class="border-2 border-white/70 bg-[hsl(262_83%_58%)] px-3 py-1.5 font-display text-sm tracking-wider text-white hover:bg-[hsl(262_83%_65%)] focus-visible:outline-2 focus-visible:outline-accent"
         >
-          Comprar
+          COMPRAR
         </button>
       </div>
     </div>
@@ -38,17 +44,31 @@ export class ItemCardComponent {
 
   protected readonly rarityClass = () => {
     switch (this.item().rarity) {
-      case Rarity.LEGENDARY: return 'bg-purple-100 text-purple-700';
-      case Rarity.RARE: return 'bg-blue-100 text-blue-700';
-      default: return 'bg-gray-100 text-gray-700';
+      case Rarity.LEGENDARY:
+        return 'bg-[hsl(271_91%_55%)] text-white';
+      case Rarity.EPIC:
+        return 'bg-[hsl(262_83%_45%)] text-white';
+      case Rarity.RARE:
+        return 'bg-[hsl(199_89%_38%)] text-white';
+      case Rarity.UNCOMMON:
+        return 'bg-[hsl(142_71%_35%)] text-white';
+      default:
+        return 'bg-[hsl(0_0%_45%)] text-white';
     }
   };
 
   protected readonly rarityBg = () => {
     switch (this.item().rarity) {
-      case Rarity.LEGENDARY: return 'bg-purple-100';
-      case Rarity.RARE: return 'bg-blue-100';
-      default: return 'bg-gray-100';
+      case Rarity.LEGENDARY:
+        return 'bg-[hsl(271_91%_40%_/_0.35)]';
+      case Rarity.EPIC:
+        return 'bg-[hsl(262_83%_45%_/_0.3)]';
+      case Rarity.RARE:
+        return 'bg-[hsl(199_89%_48%_/_0.3)]';
+      case Rarity.UNCOMMON:
+        return 'bg-[hsl(142_71%_45%_/_0.3)]';
+      default:
+        return 'bg-[hsl(0_0%_50%_/_0.2)]';
     }
   };
 }

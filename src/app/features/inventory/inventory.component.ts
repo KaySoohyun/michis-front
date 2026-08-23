@@ -7,39 +7,52 @@ import { UserInventory } from '../../models';
   selector: 'app-inventory',
   imports: [RouterLink],
   template: `
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 class="text-2xl font-bold text-gray-900 mb-6">Mi Inventario</h1>
+    <div class="mx-auto max-w-7xl px-4 py-8 font-body sm:px-6 lg:px-8">
+      <h1 class="mb-6 font-display text-2xl tracking-[0.2em] text-white">MI INVENTARIO</h1>
 
       @if (loading()) {
-        <div class="text-center py-12 text-gray-500">Cargando inventario...</div>
+        <p class="py-12 text-center text-white/60">Cargando inventario...</p>
       } @else if (error()) {
-        <div class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded mb-6">
+        <p
+          class="pixel-frame bg-[hsl(0_60%_40%)] px-4 py-3 text-sm text-white"
+          role="alert"
+        >
           {{ error() }}
-        </div>
+        </p>
       } @else if (items().length === 0) {
-        <div class="text-center py-12 text-gray-500">
-          <p class="text-lg mb-2">Tu inventario está vacío</p>
-          <a routerLink="/dashboard/shop" class="text-blue-600 hover:text-blue-800">Ir a la tienda</a>
+        <div class="py-12 text-center">
+          <p class="mb-2 text-lg text-white/70">Tu inventario está vacío</p>
+          <a
+            routerLink="/dashboard/shop"
+            class="font-display text-accent underline hover:text-[hsl(45_93%_55%)]"
+          >IR A LA TIENDA</a>
         </div>
       } @else {
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           @for (entry of items(); track entry.id) {
-            <div class="bg-white rounded-lg shadow-md p-4">
-              <div class="flex items-start justify-between mb-2">
-                <div class="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center text-xl">
+            <div class="pixel-frame bg-[hsl(230_20%_12%)] p-4">
+              <div class="mb-2 flex items-start justify-between">
+                <div
+                  class="grid size-10 place-items-center bg-[hsl(230_20%_18%)] text-xl"
+                  aria-hidden="true"
+                >
                   🎁
                 </div>
-                <span class="text-sm text-gray-500">x{{ entry.quantity }}</span>
+                <span class="font-display text-sm text-white/70">x{{ entry.quantity }}</span>
               </div>
 
-              <h3 class="font-semibold text-gray-900 mb-1">{{ entry.item.name }}</h3>
-              <p class="text-xs text-gray-500 mb-2">{{ entry.item.type }} · {{ entry.item.rarity }}</p>
+              <h3 class="mb-1 font-display text-lg text-white">{{ entry.item.name }}</h3>
+              <p class="mb-2 text-xs uppercase tracking-wider text-white/60">
+                {{ entry.item.type }} · {{ entry.item.rarity }}
+              </p>
 
               <div class="flex items-center justify-between">
                 @if (entry.isEquipped) {
-                  <span class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">Equipado</span>
+                  <span class="bg-[hsl(142_71%_35%)] px-2 py-0.5 font-display text-xs tracking-wider text-white">
+                    EQUIPADO
+                  </span>
                 } @else {
-                  <span class="text-xs text-gray-400">No equipado</span>
+                  <span class="text-xs text-white/50">No equipado</span>
                 }
               </div>
             </div>
