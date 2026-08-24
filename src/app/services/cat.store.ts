@@ -66,6 +66,15 @@ export class CatStore implements OnDestroy {
     this.catsSignal.update((list) => list.map((c) => (c.id === cat.id ? cat : c)));
   }
 
+  /** Inserta o actualiza un michi (p. ej. al llegar de GET /cats/:id). */
+  upsertCat(cat: Cat): void {
+    this.catsSignal.update((list) =>
+      list.some((c) => c.id === cat.id)
+        ? list.map((c) => (c.id === cat.id ? cat : c))
+        : [...list, cat],
+    );
+  }
+
   adoptCat(data: CreateCatRequest): Observable<CatActionResponse> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);

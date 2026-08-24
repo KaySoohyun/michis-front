@@ -19,7 +19,10 @@ const HAPPY_MESSAGES = [
       role="status"
       aria-live="polite"
     >
-      <span class="mr-1 text-accent">▼</span>{{ message() }}
+      <p class="mb-1 font-display text-xs tracking-[0.2em] text-white/80">{{ cat().name }} DICE:</p>
+      <p>
+        <span class="mr-1 text-accent" aria-hidden="true">▼</span>{{ message() }}
+      </p>
     </div>
   `,
 })

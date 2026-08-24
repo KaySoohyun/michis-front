@@ -23,7 +23,11 @@ import {
     ActionBarComponent,
   ],
   template: `
-    @if (cat(); as cat) {
+    @if (loadError(); as error) {
+      <p class="pixel-frame bg-[hsl(0_60%_40%)] px-4 py-3 text-sm text-white" role="alert">
+        {{ error }}
+      </p>
+    } @else if (cat(); as cat) {
       <div class="mx-auto max-w-3xl">
         <button
           type="button"
@@ -45,26 +49,26 @@ import {
               >
                 STATUS
               </h2>
-              <app-status-meter label="FELIZ" kind="hearts" [value]="cat.happiness" />
-              <app-status-meter label="SACIADO" [value]="cat.hunger" />
-              <app-status-meter label="ENERGÍA" [value]="cat.energy" />
-              <app-status-meter label="LIMPIO" [value]="cat.cleanliness" />
-              <div class="pt-1">
+              <app-status-meter label="FELIZ" kind="hearts" icon="♥" [value]="cat.happiness" />
+              <app-status-meter label="HAMBRE" icon="🍴" [value]="cat.hunger" />
+              <app-status-meter label="SUEÑO" icon="☾" [value]="cat.energy" />
+              <app-status-meter label="LIMPIO" icon="✿" [value]="cat.cleanliness" />
+              <div class="border-t-2 border-white/40 pt-2">
                 <app-level-badge [birthDate]="cat.birthDate" />
               </div>
             </aside>
 
             <!-- Pantalla del michi -->
-            <div class="flex flex-col items-center justify-center gap-3">
+            <div class="flex flex-col items-center justify-center">
               <div
-                class="pixel-frame flex min-h-44 w-full items-center justify-center bg-[hsl(230_20%_14%)] p-4"
+                class="pixel-frame flex min-h-56 w-full flex-1 items-center justify-center bg-[hsl(230_20%_14%)] p-4"
                 aria-hidden="true"
               >
                 @if (cat.avatarUrl) {
                   <img
                     [src]="cat.avatarUrl"
                     [alt]="cat.name"
-                    class="pixelated max-h-40 object-contain"
+                    class="pixelated max-h-52 object-contain"
                   />
                 } @else {
                   <pre class="font-display text-xl leading-snug text-white sm:text-2xl">
@@ -75,8 +79,11 @@ import {
                 }
               </div>
               <p class="sr-only">{{ cat.name }}, especie {{ cat.species }}.</p>
-              <app-dialog-box class="w-full" [cat]="cat" [status]="status()" />
             </div>
+          </div>
+
+          <div class="px-4 pb-4">
+            <app-dialog-box class="w-full" [cat]="cat" [status]="status()" />
           </div>
 
           <app-action-bar [disabled]="!canAct()" (action)="onAction($event)" />
@@ -129,17 +136,29 @@ export class CatDetailComponent implements OnInit {
   private readonly inventoryService = inject(InventoryService);
   private readonly router = inject(Router);
 
-  readonly catId = input.required<string>();
+  readonly catId = input.required<string>({ alias: 'id' });
 
   readonly cat = this.catStore.selectedCat;
   readonly status = this.catStore.catStatus;
 
+  readonly loadError = signal<string | null>(null);
   readonly clothing = signal<UserInventory[]>([]);
   readonly feedback = signal<string | null>(null);
   readonly equipping = signal(false);
 
   ngOnInit(): void {
+    // Resolución inmediata si el store ya tiene el michi (ej: viniste del dashboard)...
     this.catStore.selectCat(this.catId());
+    // ...y en todos los casos se refresca desde GET /cats/:id (stats al día,
+    // y la pantalla funciona entrando directo por URL).
+    this.catService.getCat(this.catId()).subscribe({
+      next: ({ cat }) => {
+        this.catStore.upsertCat(cat);
+        this.catStore.selectCat(cat.id);
+      },
+      error: () =>
+        this.loadError.set('No se pudo cargar el michi. Volvé al dashboard e intentá de nuevo.'),
+    });
     this.inventoryService.getInventory().subscribe({
       next: (items) =>
         this.clothing.set(items.filter((e) => e.item.type === 'CLOTHING' && e.quantity > 0)),

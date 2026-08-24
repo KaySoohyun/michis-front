@@ -6,7 +6,12 @@ export type StatKind = 'hearts' | 'squares';
   selector: 'app-status-meter',
   template: `
     <div class="flex items-center justify-between gap-2">
-      <span class="font-display text-sm tracking-wider text-white/90">{{ label() }}</span>
+      <span class="flex items-center gap-1.5 font-display text-sm tracking-wider text-white/90">
+        @if (icon(); as iconGlyph) {
+          <span aria-hidden="true">{{ iconGlyph }}</span>
+        }
+        {{ label() }}
+      </span>
       <span class="flex gap-1" role="img" [attr.aria-label]="ariaLabel()">
         @for (filled of cells(); track $index) {
           <span
@@ -28,6 +33,7 @@ export class StatusMeterComponent {
   readonly label = input.required<string>();
   readonly value = input.required<number>();
   readonly kind = input<StatKind>('squares');
+  readonly icon = input<string | null>(null);
 
   protected readonly cells = computed(() => {
     const filled = Math.round(Math.min(100, Math.max(0, this.value())) / 20);
