@@ -129,6 +129,7 @@ export class AdoptarComponent implements OnInit {
       species: kitten.species,
       personality: kitten.personality,
       lore: kitten.lore,
+      avatarUrl: this.kittensService.imageUrl(kitten) ?? undefined,
     }).subscribe(() => {
       // Solo llega acá si la adopción fue exitosa (el store maneja el error).
       this.adoptedKitten.set(kitten);

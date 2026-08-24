@@ -32,6 +32,7 @@ export interface CreateCatRequest {
   species?: string;
   personality?: string;
   lore?: string;
+  avatarUrl?: string;
 }
 
 export interface CatActionResponse {
