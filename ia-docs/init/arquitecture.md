@@ -25,7 +25,7 @@ frontend/
 │   │   │   │           ├── level-badge/      # LV + EXP decorativa desde birthDate
 │   │   │   │           ├── dialog-box/       # Mensajes según estado del michi
 │   │   │   │           └── action-bar/       # ALIMENTAR/LIMPIAR/DORMIR/JUGAR
-│   │   │   ├── ai-cat-generator/         # Generador de michis con IA
+│   │   │   ├── adoptar/                    # Galería diaria de gatitos (cards completas)
 │   │   │   ├── shop/                      # Tienda (catálogo y compra)
 │   │   │   ├── inventory/                 # Inventario del usuario
 │   │   │   └── trivia/                    # Trivia cósmica con IA
@@ -141,7 +141,7 @@ export const routes: Routes = [
       { path: 'shop',        loadComponent: () => import('./features/shop/shop.component') },
       { path: 'inventory',   loadComponent: () => import('./features/inventory/inventory.component') },
       { path: 'trivia',      loadComponent: () => import('./features/trivia/trivia.component') },
-      { path: 'ai-generator', loadComponent: () => import('./features/dashboard/ai-cat-generator/ai-cat-generator.component') },
+      { path: 'adoptar', loadComponent: () => import('./features/dashboard/adoptar/adoptar.component') },
     ],
   },
   { path: '', redirectTo: '/auth/login', pathMatch: 'full' },

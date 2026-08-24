@@ -2,6 +2,35 @@
 
 Cambios significativos / bugs corregidos en `ia-docs/init/changes.md` (los más recientes al final).
 
+## 2026-08-24 — Feature 010: Adopción diaria con cards completas
+
+La pestaña ADOPTAR muestra la **rotación diaria** del backend (máx. 4 gatitos distintos por día, cambian al día siguiente) y cada mascota ahora es una **card autocontenida**: foto, nombre, especie, descripción, personalidad, historia y botón `ADOPTAR EN SLOT N` dentro de la misma card.
+
+- **Assets**: copiados los 17 gatitos nuevos (`michi1..17`) a `public/img-cat/` y borradas las imágenes viejas (`g28.png`, `image*.png`) que ya no existen en el repo.
+- **`adoptar.component.ts`**: eliminado el panel de perfil aparte (`selectedKitten`, botón X); grid pasa a 1 columna mobile / 2 desktop; hint de rotación bajo el título ("hoy están estos N; mañana llegan otros"); estado vacío cuando no hay gatitos; error de adopción se muestra en la card.
+- Verificado: tests 10/10 y build OK con las 17 imágenes en `dist/frontend/browser/img-cat/`.
+
+## 2026-08-23 — Galería de adopción (009 frontend / 008 backend)
+
+La pestaña de adopción ya no genera michis con IA: muestra una galería con los 9 gatitos reales del refugio (`img-cat`), servidos por el nuevo endpoint `GET /api/v1/kittens`.
+
+- **Assets**: fotos copiadas a `public/img-cat/` (estáticos; `imageUrl` del perfil queda vacío hasta pasar a Cloudinary — `KittensService.imageUrl()` prioriza `imageUrl`, luego `img-cat/<imageName>`, fallback 🐱).
+- **Modelo/servicio**: `KittenProfile` (id, name, species, description, personality, lore, imageName, imageUrl) y `KittensService` (desenvuelve `{ data }`, signals de loading/error).
+- **Página ADOPTAR** (`/dashboard/adoptar` reemplaza `ai-generator`): grid de tarjetas con foto/nombre/especie; click abre perfil completo (descripción, personalidad, historia, con X para cerrar); botón `ADOPTAR EN SLOT N` con la lógica de slots de la 008 (primer slot libre real; banner + botón deshabilitado con slots llenos). Al adoptar envía `lore` al `POST /cats`.
+- **Baja del generador**: eliminados `ai-cat-generator.component.ts`, `GeneratedCat`, `GenerateCatRequest` y `AiService.generateCat/lastGeneratedCat/clearGeneratedCat`. La trivia no cambia.
+- **Renombres**: nav-rail GENERAR → ADOPTAR (✨), hint de slots libres "Adoptá en ✨ ADOPTAR", `CreateCatRequest.lore?`.
+- Verificado: tests 10/10, build OK y fotos presentes en `dist/frontend/browser/img-cat/`.
+
+## 2026-08-23 — Feature 007: Trivia con selector de dificultad
+
+`/trivia` ahora abre con un selector de dificultad (easy 5-10, medium 15-25, hard 30-50, cosmic 75-100 monedas) y todas las preguntas se piden con `?difficulty=` elegido; la categoría sigue random.
+
+- `trivia.component.ts`: máquina de estados con signal `selectedDifficulty` (null → selector, elegida → juego). El selector muestra 4 botones pixel con rango de recompensas e íconos, sin llamar a la API al entrar.
+- **X** en el marco de juego (44x44, aria-label "Volver al selector de dificultad") vuelve al selector y limpia pregunta/resultados desde cualquier estado.
+- Al fallar: se revela solución + explicación con 0 monedas y una nota indicando que la pregunta puede reaparecer más adelante (el backend ya no excluye las fallidas del sorteo, ver feature 007 del backend). SIGUIENTE pide otra pregunta de la misma dificultad.
+- Acierto: refresca monedas siempre (`userService.loadCoins()`), antes solo lo hacía si el saldo era exactamente 0.
+- Tests nuevos del componente (selector, difficulty enviada, X, reintento post-fallo): suite 10/10 verde + build OK.
+
 ## 2026-08-22 — Feature 006: UI Tamagotchi Pixel Art completa
 
 Se terminó la feature 006 (ver `ia-docs/features/006-tamagotchi-ui/`), dejando toda la interfaz en tema pixel/galaxia.
@@ -24,6 +53,17 @@ Se agregaron estrellas al backdrop para reforzar la estética espacial, sobre el
   - Capa 2: estrellas menos densas y más brillantes con glow suave, tile de 480x400px.
 - Titileo sutil por opacidad (6s capa 1, 4s capa 2) y desactivado con `prefers-reduced-motion: reduce`.
 - Sin cambios en componentes: aplica a todas las rutas (incluye login/register).
+
+## 2026-08-23 — Adopción solo desde el generador
+
+La adopción quedó limitada a la pestaña GENERAR (`/dashboard/ai-generator`); el dashboard ya no ofrece ninguna vía de adopción.
+
+- `dashboard.component.ts`: se quitaron el botón `+ ADOPTAR` del header y los botones `ADOPTAR` de los slots libres. Los slots libres ahora muestran el hint "Adoptá en ✨ GENERAR" con link al generador.
+- Se eliminó `adopt-form/` (`AdoptFormComponent`): no hay adopción manual sin IA.
+- `ai-cat-generator.component.ts`:
+  - Con los 3 slots ocupados se muestra un aviso y `ADOPTAR EN SLOT N` queda deshabilitado.
+  - El slot destino es el primer slot libre real; corrige el cálculo anterior (`3 - disponibles + 1`) que adoptaba sobre un slot ocupado al haber liberado un slot intermedio.
+  - El botón muestra el slot destino (`ADOPTAR EN SLOT 2`, etc.).
 
 ## 2026-08-22 — Fondo Aurora (dark theme)
 
