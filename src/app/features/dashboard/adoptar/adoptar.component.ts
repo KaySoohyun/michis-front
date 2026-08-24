@@ -13,7 +13,14 @@ import { KittenProfile } from '../../../models';
         cósmico; mañana llegan otros.
       </p>
 
-      @if (!hasFreeSlots()) {
+      @if (adoptedKitten(); as adopted) {
+        <p
+          class="pixel-frame mb-6 bg-[hsl(142_71%_35%_/_0.4)] px-4 py-3 text-sm text-white"
+          role="status"
+        >
+          ¡{{ adopted.name }} ahora es parte de tu familia! Ve a visitarlo y darle cariño!.
+        </p>
+      } @else if (!hasFreeSlots()) {
         <p
           class="pixel-frame mb-6 bg-[hsl(230_20%_16%)] px-4 py-3 text-sm text-white/80"
           role="status"
@@ -68,17 +75,18 @@ import { KittenProfile } from '../../../models';
                 </div>
               </dl>
 
-              @if (catStore.error()) {
-                <p class="mb-3 text-sm text-red-300" role="alert">{{ catStore.error() }}</p>
+              @if (lastAdoptAttempt()?.id === kitten.id && catStore.error(); as adoptError) {
+                <p class="mb-3 text-sm text-red-300" role="alert">{{ adoptError }}</p>
               }
 
               <button
                 type="button"
                 (click)="onAdopt(kitten)"
                 [disabled]="!hasFreeSlots() || catStore.loading()"
+                aria-label="Adoptar a {{ kitten.name }}"
                 class="w-full border-2 border-white/70 bg-[hsl(262_83%_58%)] px-4 py-2 font-display tracking-widest text-white hover:bg-[hsl(262_83%_65%)] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-accent"
               >
-                ADOPTAR EN SLOT {{ firstFreeSlot() }}
+                ADOPTAR
               </button>
             </li>
           }
@@ -91,6 +99,9 @@ export class AdoptarComponent implements OnInit {
   readonly kittensService = inject(KittensService);
   readonly catStore = inject(CatStore);
 
+  readonly lastAdoptAttempt = signal<KittenProfile | null>(null);
+  readonly adoptedKitten = signal<KittenProfile | null>(null);
+
   readonly firstFreeSlot = computed(() => {
     const taken = new Set(this.catStore.cats().map((c) => c.slotNumber));
     return ([1, 2, 3] as const).find((s) => !taken.has(s)) ?? null;
@@ -100,18 +111,27 @@ export class AdoptarComponent implements OnInit {
 
   ngOnInit(): void {
     this.kittensService.loadKittens().subscribe();
+    // Si se entra directo a /dashboard/adoptar el store puede estar vacío
+    // y los slots se calcularían mal.
+    if (!this.catStore.cats().length) {
+      this.catStore.loadCats();
+    }
   }
 
   onAdopt(kitten: KittenProfile): void {
     const slot = this.firstFreeSlot();
     if (slot === null) return;
 
+    this.lastAdoptAttempt.set(kitten);
     this.catStore.adoptCat({
       name: kitten.name,
       slotNumber: slot,
       species: kitten.species,
       personality: kitten.personality,
       lore: kitten.lore,
+    }).subscribe(() => {
+      // Solo llega acá si la adopción fue exitosa (el store maneja el error).
+      this.adoptedKitten.set(kitten);
     });
   }
 }

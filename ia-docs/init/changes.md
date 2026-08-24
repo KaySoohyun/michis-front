@@ -2,6 +2,23 @@
 
 Cambios significativos / bugs corregidos en `ia-docs/init/changes.md` (los más recientes al final).
 
+## 2026-08-24 — Fix: adopción con slots mal calculados y error repetido en todas las cards
+
+Dos bugs de la pestaña ADOPTAR reportados al probar:
+
+- **Slot incorrecto**: entrando directo a `/dashboard/adoptar` el `CatStore` estaba vacío (solo el dashboard lo carga), `firstFreeSlot()` devolvía 1 y el botón decía "ADOPTAR EN SLOT 1" aunque el libre real fuera otro → el backend rechazaba con "slot ocupado". Ahora `adoptar.component.ts` llama a `catStore.loadCats()` en `ngOnInit` si no hay michis cargados.
+- **Error duplicado**: el error de adopción se renderizaba dentro de todas las cards porque `catStore.error()` es global. Ahora se guarda `lastAdoptAttempt` y el error solo se muestra en la card del gatito que se intentó adoptar.
+- **Botón**: dejó de anunciar el slot ("ADOPTAR EN SLOT N" → "ADOPTAR"); la adopción siempre va al primer slot libre que resuelve el store ya corregido.
+- Tests nuevos del componente (`adoptar.component.spec.ts`): botón sin slot, carga de michis al entrar directo, slot real según michis cargados, error solo en la card correspondiente. Suite 14/14 verde + build OK.
+
+### Follow-up (mismo día): sin confirmación tras adoptar
+
+Al adoptar con éxito, la suma del michi al store llenaba los slots y aparecía el banner "Tenés los 3 slots ocupados..." como único feedback — parecía un error aunque la adopción hubiera funcionado.
+
+- `CatStore.adoptCat` ahora devuelve el observable (`tap` para actualizar estado, `catchError` que setea el error y completa) así el componente puede reaccionar al éxito sin duplicar la llamada HTTP.
+- El componente guarda `adoptedKitten` y muestra un banner verde de confirmación ("¡Nova ya es parte de tu familia!") que **reemplaza** al aviso de slots llenos justo después de adoptar; ese aviso sigue apareciendo si se entra a la página con los slots ya ocupados.
+- Test nuevo: éxito muestra confirmación y no el banner de slots. Suite 15/15 verde + build OK.
+
 ## 2026-08-24 — Feature 010: Adopción diaria con cards completas
 
 La pestaña ADOPTAR muestra la **rotación diaria** del backend (máx. 4 gatitos distintos por día, cambian al día siguiente) y cada mascota ahora es una **card autocontenida**: foto, nombre, especie, descripción, personalidad, historia y botón `ADOPTAR EN SLOT N` dentro de la misma card.

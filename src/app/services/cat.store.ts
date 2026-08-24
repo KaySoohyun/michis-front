@@ -1,6 +1,8 @@
 import { Injectable, signal, computed, inject, OnDestroy } from '@angular/core';
+import { Observable } from 'rxjs';
+import { EMPTY, catchError, tap } from 'rxjs';
 import { CatService } from './cat.service';
-import { Cat, CatStatus, CreateCatRequest } from '../models';
+import { Cat, CatStatus, CatActionResponse, CreateCatRequest } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class CatStore implements OnDestroy {
@@ -64,20 +66,24 @@ export class CatStore implements OnDestroy {
     this.catsSignal.update((list) => list.map((c) => (c.id === cat.id ? cat : c)));
   }
 
-  adoptCat(data: CreateCatRequest): void {
+  adoptCat(data: CreateCatRequest): Observable<CatActionResponse> {
     this.loadingSignal.set(true);
     this.errorSignal.set(null);
 
-    this.catService.adoptCat(data).subscribe({
-      next: (response) => {
+    return this.catService.adoptCat(data).pipe(
+      tap((response) => {
         this.catsSignal.update((list) => [...list, response.cat]);
         this.loadingSignal.set(false);
-      },
-      error: (err) => {
-        this.errorSignal.set(err.error?.message || 'Error al adoptar michi');
+      }),
+      catchError((err: unknown) => {
+        const message =
+          (err as { error?: { message?: string } })?.error?.message ??
+          'Error al adoptar michi';
+        this.errorSignal.set(message);
         this.loadingSignal.set(false);
-      },
-    });
+        return EMPTY;
+      }),
+    );
   }
 
   feedCat(catId: string, itemId: string): void {

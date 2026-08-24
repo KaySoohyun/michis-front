@@ -10,7 +10,8 @@ repetidos, y cambia al día siguiente.
 
 Cada mascota se presenta en una **card completa autocontenida**: foto, nombre,
 especie y sus datos (descripción, personalidad, historia) **dentro de la card**, con
-el botón `ADOPTAR EN SLOT N` directamente en ella. Se elimina el panel de perfil
+el botón `ADOPTAR` directamente en ella (sin anunciar el slot: la adopción siempre
+va al primer slot libre que tenga el usuario). Se elimina el panel de perfil
 aparte: ya no hay click → detalle, todo se ve de una.
 
 ## Por qué
@@ -27,8 +28,9 @@ La rotación diaria le da motivo para volver mañana.
 2. **Card rediseñada** (`adoptar.component.ts`):
    - foto cuadrada + nombre + especie,
    - datos visibles: descripción, personalidad, historia,
-   - botón `ADOPTAR EN SLOT N` con la lógica existente (primer slot libre real;
-     deshabilitado + banner con los 3 slots ocupados),
+   - botón `ADOPTAR` con la lógica existente (primer slot libre real;
+     deshabilitado + banner con los 3 slots ocupados; el error de adopción
+     se muestra solo en la card del gatito intentado),
    - feedback de error de adopción dentro de la card.
 3. **Baja del panel de perfil**: fuera `selectedKitten`, la X y su template; el
    grid pasa a 1 columna en mobile / 2 en desktop (cards más altas).
