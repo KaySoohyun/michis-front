@@ -121,7 +121,7 @@ describe('AdoptarComponent', () => {
     f.detectChanges();
 
     const text = (f.nativeElement as HTMLElement).textContent ?? '';
-    expect(text).toContain('ya es parte de tu familia');
+    expect(text).toContain('ahora es parte de tu familia');
     expect(text).not.toContain('Tenés los 3 slots ocupados');
   });
 });

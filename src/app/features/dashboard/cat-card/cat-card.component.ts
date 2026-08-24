@@ -2,6 +2,7 @@ import { Component, computed, inject, input, output } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Cat } from '../../../models';
 import { ClockService } from '../../../services/clock.service';
+import { levelFor } from '../../../shared/level';
 
 @Component({
   selector: 'app-cat-card',
@@ -77,11 +78,7 @@ export class CatCardComponent {
     return c.hunger < 10 || c.energy < 10;
   });
 
-  protected readonly level = computed(() => {
-    const birth = new Date(this.cat().birthDate).getTime();
-    const days = Math.max(0, Math.floor((this.clock.now().getTime() - birth) / 86_400_000));
-    return Math.floor(days / 7) + 1;
-  });
+  protected readonly level = computed(() => levelFor(this.cat().birthDate, this.clock.now()));
 
   protected readonly stats = computed(() => {
     const c = this.cat();

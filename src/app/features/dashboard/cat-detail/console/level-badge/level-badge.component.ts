@@ -1,5 +1,6 @@
 import { Component, computed, inject, input } from '@angular/core';
 import { ClockService } from '../../../../../services/clock.service';
+import { MAX_EXP, expProgress, levelFor } from '../../../../../shared/level';
 
 @Component({
   selector: 'app-level-badge',
@@ -11,12 +12,12 @@ import { ClockService } from '../../../../../services/clock.service';
         role="progressbar"
         [attr.aria-valuenow]="exp()"
         aria-valuemin="0"
-        aria-valuemax="200"
+        [attr.aria-valuemax]="maxExp"
         [attr.aria-label]="'Experiencia decorativa: nivel ' + level()"
       >
-        <div class="bg-accent" [style.width.%]="(exp() / 200) * 100"></div>
+        <div class="bg-accent" [style.width.%]="(exp() / maxExp) * 100"></div>
       </div>
-      <p class="text-xs text-white/70">EXP {{ exp() }}/200</p>
+      <p class="text-xs text-white/70">EXP {{ exp() }}/{{ maxExp }}</p>
     </div>
   `,
 })
@@ -25,14 +26,8 @@ export class LevelBadgeComponent {
 
   readonly birthDate = input.required<string>();
 
-  protected readonly daysAlive = computed(() =>
-    Math.max(
-      0,
-      Math.floor((this.clock.now().getTime() - new Date(this.birthDate()).getTime()) / 86_400_000),
-    ),
-  );
+  protected readonly maxExp = MAX_EXP;
 
-  /** 1 nivel por semana de vida; EXP = avance dentro de la semana actual. */
-  protected readonly level = computed(() => Math.floor(this.daysAlive() / 7) + 1);
-  protected readonly exp = computed(() => Math.round((this.daysAlive() % 7) / 7 * 200));
+  protected readonly level = computed(() => levelFor(this.birthDate(), this.clock.now()));
+  protected readonly exp = computed(() => expProgress(this.birthDate(), this.clock.now()));
 }

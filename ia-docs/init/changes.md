@@ -19,6 +19,15 @@ Al adoptar con éxito, la suma del michi al store llenaba los slots y aparecía 
 - El componente guarda `adoptedKitten` y muestra un banner verde de confirmación ("¡Nova ya es parte de tu familia!") que **reemplaza** al aviso de slots llenos justo después de adoptar; ese aviso sigue apareciendo si se entra a la página con los slots ya ocupados.
 - Test nuevo: éxito muestra confirmación y no el banner de slots. Suite 15/15 verde + build OK.
 
+## 2026-08-24 — Fix: nivel de los michis no reflejaba la edad
+
+Los michis mostraban LV.1 aunque ya tuvieran días de vida: la fórmula decorativa subía **1 nivel por semana** (`floor(días / 7) + 1`), y además estaba duplicada en `cat-card.component.ts` y `level-badge.component.ts`.
+
+- Nuevo helper `src/app/shared/level.ts` (`daysAlive`, `levelFor`, `expProgress`, `MAX_EXP`): **1 nivel por día completo de vida** (recién adoptado → LV.1, un día después → LV.2, etc.) y EXP = avance dentro del día actual hacia el próximo nivel (0..200).
+- `level-badge.component.ts` y `cat-card.component.ts` ahora usan el helper compartido (sin fórmulas duplicadas).
+- Test nuevo: `src/app/shared/level.spec.ts` (nivel inicial, +1 por día, límites de EXP). Suite 20/20 verde + build OK.
+
+
 ## 2026-08-24 — Feature 010: Adopción diaria con cards completas
 
 La pestaña ADOPTAR muestra la **rotación diaria** del backend (máx. 4 gatitos distintos por día, cambian al día siguiente) y cada mascota ahora es una **card autocontenida**: foto, nombre, especie, descripción, personalidad, historia y botón `ADOPTAR EN SLOT N` dentro de la misma card.
