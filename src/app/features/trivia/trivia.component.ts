@@ -1,7 +1,6 @@
 import { Component, inject, signal, OnInit } from '@angular/core';
 import { AiService } from '../../services/ai.service';
 import { UserService } from '../../services/user.service';
-import { TriviaQuestion } from '../../models';
 
 interface TriviaResult {
   correct: boolean;
