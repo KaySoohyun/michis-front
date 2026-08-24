@@ -19,6 +19,24 @@ Al adoptar con éxito, la suma del michi al store llenaba los slots y aparecía 
 - El componente guarda `adoptedKitten` y muestra un banner verde de confirmación ("¡Nova ya es parte de tu familia!") que **reemplaza** al aviso de slots llenos justo después de adoptar; ese aviso sigue apareciendo si se entra a la página con los slots ya ocupados.
 - Test nuevo: éxito muestra confirmación y no el banner de slots. Suite 15/15 verde + build OK.
 
+## 2026-08-24 — Fix + redesign: consola del michi en blanco y nuevo layout (extras/card-cat.md)
+
+Al hacer click en VER la pantalla `/dashboard/cat/:id` quedaba en "Cargando michi..." para siempre. Tres causas combinadas:
+
+- **`withComponentInputBinding()` faltante**: sin él, Angular no bindea parámetros de ruta a inputs del componente.
+- **Nombre del input**: el componente declaraba `catId` pero la ruta define `:id`; el binding es por nombre exacto, así que el valor nunca llegaba. Ahora `catId = input.required<string>({ alias: 'id' })`.
+- **Sin fetch propio**: la pantalla solo leía del store cacheado; si entraba directo por URL (o el store estaba vacío) no había llamada al backend y se quedaba colgada. Ahora `ngOnInit` llama a `GET /cats/:id` (`CatService.getCat`, ya existente), hace upsert del resultado en el store (`CatStore.upsertCat`) y muestra un error claro si falla, en vez de "Cargando..." infinito. La llamada al inventario que se veía en la red era la sección ACCESORIOS, no el bug.
+
+Rediseño de la pantalla según el dibujo de `ia-docs/extras/card-cat.md`:
+
+- **Panel STATUS** (izquierda): medidores con iconos ♥ FELIZ / 🍴 HAMBRE / ☾ SUEÑO / ✿ LIMPIO (`status-meter` ahora acepta input `icon`), separador y badge LV/EXP debajo.
+- **Imagen del gato** (derecha): panel grande con `avatarUrl`; fallback ASCII si no tiene.
+- **Diálogo** a lo ancho bajo la consola, con formato "{NOMBRE} DICE:" (`dialog-box`).
+- **Action bar**: 5 botones cuadrados CHAT / COMER / JUGAR / DORMIR / ACICALAR usando los SVG de `public/icons/` (chat/comer/jugar/dormir/acicalar) vía `NgOptimizedImage`. Los labels reemplazan a Alimentar/Limpiar (mismas acciones internas). CHAT queda deshabilitado ("Próximamente"): la misión prohíbe chat social y conversar con el michi sería una feature nueva con su propio spec.
+- **Foto real al adoptar**: `POST /cats` ahora acepta `avatarUrl` opcional y ADOPTAR envía `img-cat/<imageName>` del perfil elegido → los michis nuevos muestran su foto en la consola. Los ya adoptados siguen con el fallback ASCII.
+
+Verificado: tests 20/20 + build OK (backend 24/24 + build OK con el cambio de DTO).
+
 ## 2026-08-24 — Fix: nivel de los michis no reflejaba la edad
 
 Los michis mostraban LV.1 aunque ya tuvieran días de vida: la fórmula decorativa subía **1 nivel por semana** (`floor(días / 7) + 1`), y además estaba duplicada en `cat-card.component.ts` y `level-badge.component.ts`.
