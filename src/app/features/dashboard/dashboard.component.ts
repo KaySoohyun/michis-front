@@ -1,32 +1,17 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { CatStore } from '../../services/cat.store';
 import { CatCardComponent } from './cat-card/cat-card.component';
-import { AdoptFormComponent } from './adopt-form/adopt-form.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CatCardComponent, AdoptFormComponent, SkeletonComponent],
+  imports: [CatCardComponent, RouterLink, SkeletonComponent],
   template: `
     <div class="mx-auto max-w-5xl px-4 py-8 font-body sm:px-6">
-      <header class="mb-6 flex items-center justify-between gap-4">
+      <header class="mb-6">
         <h1 class="font-display text-2xl tracking-[0.2em] text-white">MIS MICHIS</h1>
-        @if (canAdopt() && !showAdoptForm()) {
-          <button
-            type="button"
-            (click)="showAdoptForm.set(true)"
-            class="border-2 border-white/70 bg-[hsl(262_83%_58%)] px-3 py-1.5 font-display text-sm tracking-wider text-white hover:bg-[hsl(262_83%_65%)] focus-visible:outline-2 focus-visible:outline-accent"
-          >
-            + ADOPTAR
-          </button>
-        }
       </header>
-
-      @if (showAdoptForm()) {
-        <div class="mb-6">
-          <app-adopt-form (onCancel)="showAdoptForm.set(false)" />
-        </div>
-      }
 
       @if (catStore.loading()) {
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -54,13 +39,12 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
                   SLOT {{ slot.slotNumber }}
                 </p>
                 <p class="text-xs text-white/50">Libre</p>
-                <button
-                  type="button"
-                  (click)="showAdoptForm.set(true)"
-                  class="mt-2 border-2 border-white/70 bg-[hsl(230_20%_24%)] px-3 py-1.5 font-display text-sm tracking-wider text-white hover:bg-[hsl(230_20%_30%)] focus-visible:outline-2 focus-visible:outline-accent"
+                <a
+                  routerLink="/dashboard/adoptar"
+                  class="mt-2 border-2 border-white/40 px-3 py-1.5 font-display text-xs tracking-wider text-white/70 hover:border-white/70 hover:text-white focus-visible:outline-2 focus-visible:outline-accent"
                 >
-                  ADOPTAR
-                </button>
+                  Adoptá en ✨ ADOPTAR
+                </a>
               </div>
             }
           }
@@ -71,9 +55,6 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
 })
 export default class DashboardComponent implements OnInit {
   readonly catStore = inject(CatStore);
-  readonly showAdoptForm = signal(false);
-
-  protected readonly canAdopt = computed(() => this.catStore.availableSlots() > 0);
 
   protected readonly slots = computed(() => {
     const cats = this.catStore.cats();

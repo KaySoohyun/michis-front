@@ -42,8 +42,8 @@ export const routes: Routes = [
         loadComponent: () => import('./features/trivia/trivia.component'),
       },
       {
-        path: 'ai-generator',
-        loadComponent: () => import('./features/dashboard/ai-cat-generator/ai-cat-generator.component').then(m => m.AiCatGeneratorComponent),
+        path: 'adoptar',
+        loadComponent: () => import('./features/dashboard/adoptar/adoptar.component').then(m => m.AdoptarComponent),
       },
     ],
   },

@@ -46,6 +46,6 @@ export class NavRailComponent {
     { path: '/dashboard/shop', icon: '🛒', label: 'Tienda' },
     { path: '/dashboard/inventory', icon: '🎒', label: 'Inventario' },
     { path: '/dashboard/trivia', icon: '🎓', label: 'Trivia' },
-    { path: '/dashboard/ai-generator', icon: '✨', label: 'Generar' },
+    { path: '/dashboard/adoptar', icon: '✨', label: 'Adoptar' },
   ];
 }

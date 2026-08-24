@@ -1,20 +1,12 @@
-export interface GeneratedCat {
+export interface KittenProfile {
+  id: string;
   name: string;
   species: string;
+  description: string;
   personality: string;
   lore: string;
-  stats: {
-    baseHunger: number;
-    baseEnergy: number;
-    baseHappiness: number;
-  };
-  appearanceDescription: string;
-  suggestedColorPalette: string[];
-}
-
-export interface GenerateCatRequest {
-  theme?: string;
-  difficulty?: 'common' | 'rare' | 'legendary';
+  imageName: string | null;
+  imageUrl: string | null;
 }
 
 export interface TriviaQuestion {

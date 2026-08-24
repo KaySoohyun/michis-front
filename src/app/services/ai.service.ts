@@ -4,8 +4,6 @@ import { Observable, tap } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
 import {
-  GeneratedCat,
-  GenerateCatRequest,
   TriviaQuestion,
   AnswerTriviaRequest,
   AnswerTriviaResponse,
@@ -19,27 +17,10 @@ interface Envelope<T> {
 export class AiService {
   private readonly apiUrl = `${environment.apiUrl}/ai`;
 
-  readonly lastGeneratedCat = signal<GeneratedCat | null>(null);
   readonly currentTrivia = signal<TriviaQuestion | null>(null);
   readonly loading = signal(false);
 
   constructor(private http: HttpClient) {}
-
-  generateCat(request: GenerateCatRequest): Observable<GeneratedCat> {
-    this.loading.set(true);
-    return this.http
-      .post<Envelope<GeneratedCat>>(`${this.apiUrl}/generate-cat`, request)
-      .pipe(
-        map((res) => res.data),
-        tap({
-          next: (cat) => {
-            this.lastGeneratedCat.set(cat);
-            this.loading.set(false);
-          },
-          error: () => this.loading.set(false),
-        }),
-      );
-  }
 
   generateTrivia(
     difficulty?: string,
@@ -73,10 +54,6 @@ export class AiService {
         request,
       )
       .pipe(map((res) => res.data));
-  }
-
-  clearGeneratedCat(): void {
-    this.lastGeneratedCat.set(null);
   }
 
   clearTrivia(): void {

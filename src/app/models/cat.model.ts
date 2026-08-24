@@ -31,6 +31,7 @@ export interface CreateCatRequest {
   slotNumber: number;
   species?: string;
   personality?: string;
+  lore?: string;
 }
 
 export interface CatActionResponse {
