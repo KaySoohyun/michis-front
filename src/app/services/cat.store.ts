@@ -2,7 +2,7 @@ import { Injectable, signal, computed, inject, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { EMPTY, catchError, tap } from 'rxjs';
 import { CatService } from './cat.service';
-import { Cat, CatStatus, CatActionResponse, CreateCatRequest } from '../models';
+import { Cat, CatActionResponse, CreateCatRequest, deriveCatStatus } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class CatStore implements OnDestroy {
@@ -23,16 +23,9 @@ export class CatStore implements OnDestroy {
     return this.catsSignal().find((c) => c.id === id) ?? null;
   });
 
-  readonly catStatus = computed<CatStatus | null>(() => {
+  readonly catStatus = computed(() => {
     const cat = this.selectedCat();
-    if (!cat) return null;
-    return {
-      isHungry: cat.hunger < 30,
-      isTired: cat.energy < 20,
-      isSad: cat.happiness < 25,
-      isDirty: cat.cleanliness < 30,
-      isCritical: cat.hunger < 10 || cat.energy < 10,
-    };
+    return cat ? deriveCatStatus(cat) : null;
   });
 
   readonly availableSlots = computed(() => 3 - this.catsSignal().length);

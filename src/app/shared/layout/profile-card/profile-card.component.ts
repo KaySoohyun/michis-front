@@ -9,7 +9,7 @@ import { UserService } from '../../../services/user.service';
   template: `
     @if (auth.user(); as user) {
       <aside
-        class="pixel-frame fixed left-3 top-3 z-40 w-52 bg-[hsl(230_25%_10%)] p-3 font-body text-sm"
+        class="pixel-frame fixed right-3 mt-8 z-40 w-52 bg-[hsl(230_25%_10%)] p-3 font-body text-sm"
         aria-label="Perfil de usuario"
       >
         <div class="flex items-center gap-2">

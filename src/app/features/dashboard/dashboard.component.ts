@@ -1,39 +1,36 @@
 import { Component, computed, inject, OnInit } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CatStore } from '../../services/cat.store';
-import { CatCardComponent } from './cat-card/cat-card.component';
+import { CatConsoleComponent } from './cat-console/cat-console.component';
 import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [CatCardComponent, RouterLink, SkeletonComponent],
+  imports: [CatConsoleComponent, RouterLink, SkeletonComponent],
   template: `
-    <div class="mx-auto max-w-5xl px-4 py-8 font-body sm:px-6">
-      <header class="mb-6">
-        <h1 class="font-display text-2xl tracking-[0.2em] text-white">MIS MICHIS</h1>
+    <div class="mx-auto w-full max-w-fit px-4 pb-4 font-body sm:px-6">
+      <header class="mb-3">
+        <h1 class="font-display text-xl tracking-[0.2em] text-white">MIS MICHIS</h1>
       </header>
 
       @if (catStore.loading()) {
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="flex flex-row flex-wrap items-start justify-center gap-16">
           @for (i of [1, 2, 3]; track i) {
-            <app-skeleton />
+            <app-skeleton class="block h-[calc(100dvh-8rem)] w-96" />
           }
         </div>
-      } @else if (catStore.error()) {
-        <p
-          class="pixel-frame bg-[hsl(0_60%_40%)] px-4 py-3 font-body text-sm text-white"
-          role="alert"
-        >
-          {{ catStore.error() }}
+      } @else if (catStore.error(); as error) {
+        <p class="pixel-frame bg-[hsl(0_60%_40%)] px-4 py-3 font-body text-sm text-white" role="alert">
+          {{ error }}
         </p>
       } @else {
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div class="flex flex-row flex-wrap items-start justify-center gap-16">
           @for (slot of slots(); track slot.slotNumber) {
             @if (slot.cat; as cat) {
-              <app-cat-card [cat]="cat" (onRelease)="onRelease($event)" />
+              <app-cat-console [cat]="cat" class="block w-96" />
             } @else {
               <div
-                class="pixel-frame flex min-h-44 flex-col items-center justify-center gap-2 bg-[hsl(230_20%_12%_/_0.6)] p-4 text-center"
+                class="pixel-frame flex h-44 w-96 flex-col items-center justify-center gap-2 bg-[hsl(230_20%_12%_/_0.6)] p-4 text-center"
               >
                 <p class="font-display text-lg tracking-widest text-white/60">
                   SLOT {{ slot.slotNumber }}
@@ -66,11 +63,5 @@ export default class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.catStore.loadCats();
-  }
-
-  protected onRelease(catId: string): void {
-    if (confirm('¿Estás seguro de liberar a este michi?')) {
-      this.catStore.releaseCat(catId);
-    }
   }
 }

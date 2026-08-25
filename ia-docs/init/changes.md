@@ -19,6 +19,21 @@ Al adoptar con éxito, la suma del michi al store llenaba los slots y aparecía 
 - El componente guarda `adoptedKitten` y muestra un banner verde de confirmación ("¡Nova ya es parte de tu familia!") que **reemplaza** al aviso de slots llenos justo después de adoptar; ese aviso sigue apareciendo si se entra a la página con los slots ya ocupados.
 - Test nuevo: éxito muestra confirmación y no el banner de slots. Suite 15/15 verde + build OK.
 
+## 2026-08-24 — El detalle vive en el inicio: consolas apiladas sin página de detalle
+
+Cambio estructural pedido "de a poco": el inicio muestra la **consola completa de cada michi** y desaparece la página de detalle.
+
+- Nuevo componente compartido `cat-console.component.ts` (ex consola de `cat-detail`): status con iconos, imagen, diálogo y action bar en una card autocontenida. **Sin sección ACCESORIOS** (el lookup interno de comida para COMER sigue: la API exige un `inventoryItemId`). Sin botón LIBERAR por ahora (decisión del usuario).
+- `dashboard.component.ts`: reemplaza el grid de cards por las consolas **en una sola fila** (`flex` con `gap-16` = 4rem, `flex-wrap` para pantallas chicas), cada consola de `w-96`; conserva skeletons/error/paneles de slot libre.
+- Eliminados: ruta `/dashboard/cat/:id`, `cat-detail.component.ts` (+spec) y `cat-card` (VER ya no tiene a dónde navegar).
+- `deriveCatStatus()` como función pura en `models/cat.model.ts`: store y cada consola derivan umbrales de estado de forma consistente (antes solo existía para el michi seleccionado).
+- Consola en **dos filas**: la pantalla del michi arriba a lo ancho y el panel STATUS abajo con los medidores en grilla 2×2. Action bar y top bar sin cambios.
+- **Diálogo eliminado** de la consola (componente `dialog-box` removido del repo).
+- **Profile card** movida a la derecha (`fixed right-3 top-0`, sin margen superior).
+- **Sin scroll en el inicio**: el padding superior de la página se eliminó, el header se compactó y las consolas tienen altura `calc(100dvh-8rem)`; dentro de cada consola la pantalla del michi absorbe el espacio sobrante (`flex-1 min-h-0 overflow-hidden`) y status/action quedan fijos.
+- Top bar de la consola: la fecha (dd/MM/yyyy) fue reemplazada por el nivel (`LV.N`) **+ barra de EXP** compacta (mismo cálculo diario de `shared/level`); a la derecha queda solo la hora. El `level-badge` del panel STATUS se eliminó junto con su componente (quedaba duplicado).
+- Spec nuevo de `CatConsoleComponent`: render, JUGAR→store, COMER usa el primer FOOD del inventario, aviso si no hay comida. Suite 23/23 + build OK.
+
 ## 2026-08-24 — Fix + redesign: consola del michi en blanco y nuevo layout (extras/card-cat.md)
 
 Al hacer click en VER la pantalla `/dashboard/cat/:id` quedaba en "Cargando michi..." para siempre. Tres causas combinadas:

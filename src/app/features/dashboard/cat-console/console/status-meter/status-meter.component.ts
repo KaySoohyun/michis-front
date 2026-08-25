@@ -5,11 +5,8 @@ export type StatKind = 'hearts' | 'squares';
 @Component({
   selector: 'app-status-meter',
   template: `
-    <div class="flex items-center justify-between gap-2">
+    <div class="flex flex-col pb-2">
       <span class="flex items-center gap-1.5 font-display text-sm tracking-wider text-white/90">
-        @if (icon(); as iconGlyph) {
-          <span aria-hidden="true">{{ iconGlyph }}</span>
-        }
         {{ label() }}
       </span>
       <span class="flex gap-1" role="img" [attr.aria-label]="ariaLabel()">

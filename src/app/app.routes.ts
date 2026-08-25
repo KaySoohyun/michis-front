@@ -26,10 +26,6 @@ export const routes: Routes = [
         loadComponent: () => import('./features/dashboard/dashboard.component'),
       },
       {
-        path: 'cat/:id',
-        loadComponent: () => import('./features/dashboard/cat-detail/cat-detail.component').then(m => m.CatDetailComponent),
-      },
-      {
         path: 'shop',
         loadComponent: () => import('./features/shop/shop.component'),
       },

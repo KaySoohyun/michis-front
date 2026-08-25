@@ -9,11 +9,11 @@ import { ProfileCardComponent } from '../profile-card/profile-card.component';
   template: `
     <div class="min-h-screen md:pr-20">
       <app-profile-card />
-      <main class="px-3 pb-24 pt-40 sm:px-6 md:pb-8 md:pl-6 lg:px-10">
+      <main class="px-3 pt-20 sm:px-6 md:pb-8 md:pl-6 lg:px-10">
         <router-outlet />
       </main>
       <app-nav-rail />
     </div>
   `,
 })
-export class ShellComponent {}
+export class ShellComponent { }

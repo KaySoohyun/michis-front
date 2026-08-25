@@ -6,6 +6,20 @@ export interface CatStatus {
   isCritical: boolean;
 }
 
+/** Umbrales de estado derivados de los stats (fuente única para store y consola). */
+export function deriveCatStatus(cat: Pick<
+  Cat,
+  'hunger' | 'energy' | 'happiness' | 'cleanliness'
+>): CatStatus {
+  return {
+    isHungry: cat.hunger < 30,
+    isTired: cat.energy < 20,
+    isSad: cat.happiness < 25,
+    isDirty: cat.cleanliness < 30,
+    isCritical: cat.hunger < 10 || cat.energy < 10,
+  };
+}
+
 export interface Cat {
   id: string;
   name: string;
