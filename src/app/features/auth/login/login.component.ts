@@ -52,7 +52,7 @@ import { AuthService } from '../../../core/auth/auth.service';
           <button
             type="submit"
             [disabled]="authService.loading()"
-            class="w-full border-2 border-white/70 bg-[hsl(262_83%_58%)] px-4 py-2 font-display tracking-widest text-white hover:bg-[hsl(262_83%_65%)] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-accent"
+            class="pixel-btn w-full border-2 border-white/70 bg-[hsl(262_83%_58%)] px-4 py-1.5 font-display text-sm tracking-widest text-white hover:bg-[hsl(262_83%_65%)] disabled:opacity-50 focus-visible:outline-2 focus-visible:outline-accent"
           >
             {{ authService.loading() ? 'ACCEDIENDO...' : 'INICIAR SESIÓN' }}
           </button>

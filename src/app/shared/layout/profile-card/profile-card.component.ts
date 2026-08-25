@@ -39,7 +39,7 @@ import { UserService } from '../../../services/user.service';
         <button
           type="button"
           (click)="auth.logout()"
-          class="mt-2 w-full border-2 border-white/70 bg-[hsl(0_60%_40%)] px-2 py-1.5 text-xs text-white hover:bg-[hsl(0_60%_50%)] focus-visible:outline-2 focus-visible:outline-accent"
+          class="pixel-btn mt-2 w-full border-2 border-white/70 bg-[hsl(0_60%_40%)] px-2 py-1 text-xs text-white hover:bg-[hsl(0_60%_50%)] focus-visible:outline-2 focus-visible:outline-accent"
         >
           Cerrar sesión
         </button>

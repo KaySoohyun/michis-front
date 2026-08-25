@@ -16,7 +16,7 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
       @if (catStore.loading()) {
         <div class="flex flex-row flex-wrap items-start justify-center gap-16">
           @for (i of [1, 2, 3]; track i) {
-            <app-skeleton class="block h-[calc(100dvh-8rem)] w-96" />
+            <app-skeleton class="block h-[calc(100dvh-8rem)] w-md" />
           }
         </div>
       } @else if (catStore.error(); as error) {
@@ -27,10 +27,10 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
         <div class="flex flex-row flex-wrap items-start justify-center gap-16">
           @for (slot of slots(); track slot.slotNumber) {
             @if (slot.cat; as cat) {
-              <app-cat-console [cat]="cat" class="block w-96" />
+              <app-cat-console [cat]="cat" class="block w-md" />
             } @else {
               <div
-                class="pixel-frame flex h-44 w-96 flex-col items-center justify-center gap-2 bg-[hsl(230_20%_12%_/_0.6)] p-4 text-center"
+                class="pixel-frame flex h-44 w-md flex-col items-center justify-center gap-2 bg-[hsl(230_20%_12%_/_0.6)] p-4 text-center"
               >
                 <p class="font-display text-lg tracking-widest text-white/60">
                   SLOT {{ slot.slotNumber }}
@@ -38,7 +38,7 @@ import { SkeletonComponent } from '../../shared/components/skeleton/skeleton.com
                 <p class="text-xs text-white/50">Libre</p>
                 <a
                   routerLink="/dashboard/adoptar"
-                  class="mt-2 border-2 border-white/40 px-3 py-1.5 font-display text-xs tracking-wider text-white/70 hover:border-white/70 hover:text-white focus-visible:outline-2 focus-visible:outline-accent"
+                  class="pixel-btn mt-2 border-2 border-white/40 px-3 py-1 font-display text-xs tracking-wider text-white/70 hover:border-white/70 hover:text-white focus-visible:outline-2 focus-visible:outline-accent"
                 >
                   Adoptá en ✨ ADOPTAR
                 </a>

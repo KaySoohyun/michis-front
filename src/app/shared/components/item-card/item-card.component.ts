@@ -30,7 +30,7 @@ import { InventoryItem, Rarity } from '../../../models';
         <button
           type="button"
           (click)="onBuy.emit(item().id)"
-          class="border-2 border-white/70 bg-[hsl(262_83%_58%)] px-3 py-1.5 font-display text-sm tracking-wider text-white hover:bg-[hsl(262_83%_65%)] focus-visible:outline-2 focus-visible:outline-accent"
+          class="pixel-btn border-2 border-white/70 bg-[hsl(262_83%_58%)] px-3 py-1 font-display text-xs tracking-wider text-white hover:bg-[hsl(262_83%_65%)] focus-visible:outline-2 focus-visible:outline-accent"
         >
           COMPRAR
         </button>

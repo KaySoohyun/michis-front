@@ -49,7 +49,7 @@ const DIFFICULTIES: DifficultyOption[] = [
                 type="button"
                 (click)="chooseDifficulty(d.value)"
                 [attr.aria-label]="'Dificultad ' + d.label + ', recompensa entre ' + d.coins + ' monedas'"
-                class="flex min-h-[44px] flex-col items-center gap-1 border-2 border-white/70 bg-[hsl(230_20%_14%)] px-4 py-4 transition-colors hover:border-accent hover:bg-[hsl(262_83%_35%_/_0.4)] focus-visible:outline-2 focus-visible:outline-accent"
+                class="pixel-btn flex min-h-[44px] flex-col items-center gap-1 border-2 border-white/70 bg-[hsl(230_20%_14%)] px-4 py-3 transition-colors hover:border-accent hover:bg-[hsl(262_83%_35%_/_0.4)] focus-visible:outline-2 focus-visible:outline-accent"
               >
                 <span class="font-display text-lg tracking-[0.2em] text-white">
                   {{ d.icon }} {{ d.label }}
@@ -72,7 +72,7 @@ const DIFFICULTIES: DifficultyOption[] = [
               type="button"
               (click)="backToSelector()"
               aria-label="Volver al selector de dificultad"
-              class="flex h-11 w-11 items-center justify-center border-2 border-white/70 bg-[hsl(0_84%_45%)] font-display text-xl leading-none text-white hover:bg-[hsl(0_84%_55%)] focus-visible:outline-2 focus-visible:outline-accent"
+              class="pixel-btn flex h-9 w-9 items-center justify-center border-2 border-white/70 bg-[hsl(0_84%_45%)] font-display text-lg leading-none text-white hover:bg-[hsl(0_84%_55%)] focus-visible:outline-2 focus-visible:outline-accent"
             >
               ✕
             </button>
@@ -95,7 +95,7 @@ const DIFFICULTIES: DifficultyOption[] = [
               <button
                 type="button"
                 (click)="loadNewTrivia()"
-                class="mt-6 border-2 border-white/70 bg-[hsl(262_83%_58%)] px-6 py-2 font-display tracking-wider text-white hover:bg-[hsl(262_83%_65%)] focus-visible:outline-2 focus-visible:outline-accent"
+                class="pixel-btn border-2 border-white/70 bg-[hsl(262_83%_58%)] px-5 py-1.5 font-display text-sm tracking-wider text-white hover:bg-[hsl(262_83%_65%)] focus-visible:outline-2 focus-visible:outline-accent"
               >
                 SIGUIENTE
               </button>
@@ -118,7 +118,7 @@ const DIFFICULTIES: DifficultyOption[] = [
                   type="button"
                   (click)="onAnswer($index)"
                   [disabled]="answered()"
-                  class="w-full border-2 border-white/70 bg-[hsl(230_20%_14%)] p-4 text-left text-white transition-colors disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent"
+                  class="pixel-btn w-full border-2 border-white/70 bg-[hsl(230_20%_14%)] p-3 text-left text-sm text-white transition-colors disabled:cursor-not-allowed focus-visible:outline-2 focus-visible:outline-accent"
                   [class]="getOptionClass($index)"
                 >
                   <span class="font-display">{{ $index + 1 }}.</span> {{ option }}
@@ -131,7 +131,7 @@ const DIFFICULTIES: DifficultyOption[] = [
               <button
                 type="button"
                 (click)="loadNewTrivia()"
-                class="border-2 border-white/70 bg-[hsl(262_83%_58%)] px-6 py-2 font-display tracking-wider text-white hover:bg-[hsl(262_83%_65%)] focus-visible:outline-2 focus-visible:outline-accent"
+                class="pixel-btn border-2 border-white/70 bg-[hsl(262_83%_58%)] px-5 py-1.5 font-display text-sm tracking-wider text-white hover:bg-[hsl(262_83%_65%)] focus-visible:outline-2 focus-visible:outline-accent"
               >
                 GENERAR PREGUNTA
               </button>
